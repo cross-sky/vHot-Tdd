@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="inc\Stack_a.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\atom.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Queue.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Event.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Funstate.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\commdata.h" />
+    <ClInclude Include="inc\StateRunFunctions.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{c52623e5-bb3d-4bc7-bcbd-cce460eeb8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{7f4e4b82-6966-4892-8d7c-5b34f6ced4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{1f87e5d6-9cb3-4885-a33e-84b8884f41b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bsp">
+      <UniqueIdentifier>{9a8f2996-9663-4690-85ef-90b3238899af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\user">
+      <UniqueIdentifier>{066db108-cde9-47dc-8a78-db92845d7458}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\util\Stack_a.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\assert.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\atom.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\except.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\mem.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Queue.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Funstate.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\StateRunFunction.c" />
+  </ItemGroup>
+</Project>
