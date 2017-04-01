@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AllTests.cpp" />
+    <ClCompile Include="src\bsp\ComInput_Test.cpp" />
     <ClCompile Include="src\bsp\Funstate_Test.cpp" />
     <ClCompile Include="src\bsp\Queue_Test.cpp" />
     <ClCompile Include="src\util\Atom_Test.cpp" />

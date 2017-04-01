@@ -14,6 +14,9 @@
     <ClCompile Include="src\bsp\Funstate_Test.cpp">
       <Filter>src\bsp</Filter>
     </ClCompile>
+    <ClCompile Include="src\bsp\ComInput_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />

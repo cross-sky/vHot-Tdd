@@ -1,9 +1,14 @@
 #include "comm.h"
 
+//创建全局队列
 static Queue_T S_que;
+//事件保存地址
 static Event_T S_event[QUEUELENGTH];
+//状态函数地址
 static P_RunFun S_funTable;
+//转换状态函数地址
 static P_Fundata S_pfun;
+//转换时要执行的函数
 static pRunFunctions S_changeFunList[FUN_STATE_MAX];
 
 void Funstate_createEvent(void)

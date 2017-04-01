@@ -1,6 +1,5 @@
 #ifndef __COMMBOO_H
 #define __COMMBOO_H
-
 #include <string.h>
 #include <stdio.h>
 

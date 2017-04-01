@@ -16,8 +16,13 @@
     <ClInclude Include="inc\Funstate.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\commdata.h" />
     <ClInclude Include="inc\StateRunFunctions.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\commdata.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\ComInput.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
@@ -60,6 +65,11 @@
     <ClCompile Include="src\util\Funstate.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\StateRunFunction.c" />
+    <ClCompile Include="src\util\StateRunFunction.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInput.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

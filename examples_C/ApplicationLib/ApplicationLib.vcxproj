@@ -102,6 +102,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="inc\atom.h" />
+    <ClInclude Include="inc\ComInput.h" />
     <ClInclude Include="inc\commdata.h" />
     <ClInclude Include="inc\Event.h" />
     <ClInclude Include="inc\Funstate.h" />
@@ -110,6 +111,7 @@
     <ClInclude Include="inc\StateRunFunctions.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bsp\ComInput.c" />
     <ClCompile Include="src\util\assert.c" />
     <ClCompile Include="src\util\atom.c" />
     <ClCompile Include="src\util\except.c" />
