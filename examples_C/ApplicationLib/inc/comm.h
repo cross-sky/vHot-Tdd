@@ -10,5 +10,8 @@
 #include "Funstate.h"
 #include "StateRunFunctions.h"
 
+#include "ComInput.h"
+#include "ComInputADC.h"
+
 
 #endif

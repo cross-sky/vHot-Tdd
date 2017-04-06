@@ -29,8 +29,10 @@
 //IMPORT_TEST_GROUP( CircularBuffer);
 //IMPORT_TEST_GROUP( HelloWorld);
 //IMPORT_TEST_GROUP( EventDispatcher);
-//IMPORT_TEST_GROUP( MockDocumentation);Funstate
+//IMPORT_TEST_GROUP( MockDocumentation);ComInputADC
 IMPORT_TEST_GROUP(Stack_a);
 IMPORT_TEST_GROUP(Atom);
 IMPORT_TEST_GROUP( QueueS);
 IMPORT_TEST_GROUP( Funstate);
+IMPORT_TEST_GROUP( ComInput);
+IMPORT_TEST_GROUP( ComInputADC);

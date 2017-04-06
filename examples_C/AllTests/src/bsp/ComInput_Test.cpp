@@ -8,13 +8,13 @@ extern "C"
 #include "ComInput.h"
 }
 
-static uint8_t hardFlag = UNDONE;
+static uint8_t hardFlag = DONE;
 static ComInput_T comInput;
 
 
 static void hardFun(void)
 {
-	printf("hardfun\r\n");
+	printf("hard done\r\n");
 	hardFlag = DONE;
 }
 
@@ -34,6 +34,14 @@ static void clearHardFlagFun(void)
 	hardFlag = UNDONE;
 }
 
+static void checkCount(uint8_t i)
+{
+	LONGS_EQUAL(i, comInput.count);
+}
+static void checkRunTime(uint8_t i)
+{
+	LONGS_EQUAL(i, comInput.runTime);
+}
 static void initComInput(void)
 {
 	comInput.count = 0;
@@ -46,12 +54,14 @@ static void initComInput(void)
 	comInput.hardFun = hardFun;
 	comInput.aveFun = aveFun;
 	comInput.hardFlagFun = hardFlagFun;
+	comInput.clearHardFlagFun = clearHardFlagFun;
 }
 
 TEST_GROUP(ComInput)
 {
 void setup()
 {
+	initComInput();
 	ComInput_Create();
 }
 
@@ -63,5 +73,26 @@ void teardown()
 
 TEST(ComInput, run5Wait10)
 {
+	uint8_t i;
+	//5 times convert
+	for (i = 1; i <= 5; i++)
+	{
+		ComInput_Process(&comInput);
+		checkCount(i);
+		checkRunTime(i);
+	}
 	
+	//then convert done, run ave fun
+	ComInput_Process(&comInput);
+	LONGS_EQUAL(DONE, comInput.convertFlag);
+
+	//wait max runtime
+	for (i = 7; i < 10; i++)
+	{
+		ComInput_Process(&comInput);
+		checkRunTime(i);
+	}
+	//after wait,again convert
+	ComInput_Process(&comInput);
+	LONGS_EQUAL(UNDONE, comInput.convertFlag);
 }

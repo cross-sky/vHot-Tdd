@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="AllTests.cpp" />
-    <ClCompile Include="src\util\Atom_Test.cpp">
-      <Filter>src\util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\StackA_Test.cpp">
-      <Filter>src\util</Filter>
-    </ClCompile>
     <ClCompile Include="src\bsp\Queue_Test.cpp">
       <Filter>src\bsp</Filter>
     </ClCompile>
@@ -15,6 +9,15 @@
       <Filter>src\bsp</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInput_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputADC_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Atom_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputADCSpy.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
   </ItemGroup>

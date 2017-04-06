@@ -4,20 +4,14 @@ void ComInput_Create()
 {
 
 }
-// void ComInput_Create(P_ComInput src, P_ComInput dst)
-// {
-// 	assert(src);
-// 	assert(dst);
-// 	memcpy(dst, src, sizeof(ComInput_T));
-// }
 void ComInput_Destory(P_ComInput comInput)
 {
 	
 }
 
-static uint8_t getConvertFlag(P_ComInput comInput)
+static bool getConvertFlagUndone(P_ComInput comInput)
 {
-	return comInput->convertFlag;
+	return comInput->convertFlag == UNDONE;
 }
 
 static void setConvertFlag(P_ComInput comInput, uint8_t newFlag)
@@ -37,7 +31,6 @@ static bool checkRunStageComplete(P_ComInput comInput)
 
 static bool checkHardConvertComplete(P_ComInput comInput)
 {
-	//return comInput->hardFlag == DONE;
 	uint8_t result = comInput->hardFlagFun();
 	return result == DONE;
 }
@@ -77,9 +70,9 @@ static void clearRunCount(P_ComInput comInput)
 
 void ComInput_Process(P_ComInput comInput)
 {
-	if (getConvertFlag(comInput))
+	if (getConvertFlagUndone(comInput))
 	{
-		if (checkHardConvertComplete)
+		if (checkHardConvertComplete(comInput))
 		{
 			//check countTimes
 			if (checkCountConvertComplete(comInput))
@@ -89,13 +82,13 @@ void ComInput_Process(P_ComInput comInput)
 				setConvertFlag(comInput, DONE);
 			}
 			else{
-				//convert count < 5
-				//add run count
-				addRunCount(comInput);
+				//convert count < 5			
 				clearWaitTime(comInput);
 				//clear hardFlag
 				comInput->clearHardFlagFun();
 				comInput->hardFun();
+				//add run count
+				addRunCount(comInput);
 			}
 		}
 		else
