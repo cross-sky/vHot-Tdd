@@ -28,6 +28,9 @@
     <ClInclude Include="inc\ComInputADC.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\ComInputDI.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -74,7 +77,9 @@
     <ClCompile Include="src\bsp\ComInput.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
-    <ClCompile Include="..\AllTests\src\util\StackA_Test.cpp" />
-    <ClCompile Include="src\bsp\ComInputADC.c" />
+    <ClCompile Include="src\bsp\ComInputADC.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputDI.c" />
   </ItemGroup>
 </Project>

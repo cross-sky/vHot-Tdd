@@ -104,6 +104,7 @@
     <ClInclude Include="inc\atom.h" />
     <ClInclude Include="inc\ComInput.h" />
     <ClInclude Include="inc\ComInputADC.h" />
+    <ClInclude Include="inc\ComInputDI.h" />
     <ClInclude Include="inc\commdata.h" />
     <ClInclude Include="inc\Event.h" />
     <ClInclude Include="inc\Funstate.h" />
@@ -112,9 +113,9 @@
     <ClInclude Include="inc\StateRunFunctions.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\AllTests\src\util\StackA_Test.cpp" />
     <ClCompile Include="src\bsp\ComInput.c" />
     <ClCompile Include="src\bsp\ComInputADC.c" />
+    <ClCompile Include="src\bsp\ComInputDI.c" />
     <ClCompile Include="src\util\assert.c" />
     <ClCompile Include="src\util\atom.c" />
     <ClCompile Include="src\util\except.c" />

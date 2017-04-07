@@ -8,18 +8,6 @@ extern "C"
 #include "ComInputADCSpy.h"
 }
 
-// P_ComInput _comInputAdc;
-// 
-// static uint8_t getCount(void)
-// {
-// 	return _comInputAdc->count;
-// }
-// 
-// static void initComInputAdc(void)
-// {
-// 	_comInputAdc->maxRunTime = 10;
-// }
-
 TEST_GROUP(ComInputADC)
 {
 void setup()
@@ -45,7 +33,7 @@ TEST(ComInputADC, convert5Times)
 
 	ComInputADC_process();
 
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < ADC_MAX_ENUM; i++)
 	{
 		LONGS_EQUAL(4 + i, ComInputADC_getADCValue(i));
 	}

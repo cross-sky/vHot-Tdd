@@ -16,7 +16,7 @@ void ComInputADC_setData(void)
 {
 	uint16_t *addr;
 	uint8_t i,count;
-	addr = ComInputADC_getDmaCountAddr();
+	addr = ComInputADC_getTempDataAddr();
 	count = getCount();
 	count <<= 1;
 	for (i = 0; i < ADC_MAX_ENUM; i++)
@@ -28,7 +28,7 @@ void ComInputADC_setData(void)
 
 void ComInputADCSpy_crate(void)
 {
-	_comInputAdc = ComInputADC_getbaseAddr();
+	_comInputAdc = ComInputADC_getBaseAddr();
 	initComInputAdc();
 }
 

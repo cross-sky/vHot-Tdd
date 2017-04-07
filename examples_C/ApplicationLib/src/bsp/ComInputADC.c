@@ -1,6 +1,6 @@
 #include "comm.h"
 
-static uint16_t S_tempData[MAX_ADC_CONVERT_COUNT][ADC_MAX_ENUM];
+static uint16_t S_tempData[MAX_ADI_CONVERT_COUNT][ADC_MAX_ENUM];
 
 static uint16_t S_aveData[ADC_MAX_ENUM];
 
@@ -27,14 +27,14 @@ void ComInputADC_aveFun(void)
 	for (i = 0; i < ADC_MAX_ENUM ; i++)
 	{
 		values = 0;
-		for (j = 0; j < MAX_ADC_CONVERT_COUNT; j ++)
+		for (j = 0; j < MAX_ADI_CONVERT_COUNT; j ++)
 		{
 			values += S_tempData[j][i];
 		}
-		S_aveData[i] = values / MAX_ADC_CONVERT_COUNT;
+		S_aveData[i] = values / MAX_ADI_CONVERT_COUNT;
 	}
 }
-uint8_t ComInputADC_hardFlagFun(void)
+uint8_t ComInputADC_getHardFlagFun(void)
 {
 	return S_hardFlag;
 }
@@ -46,7 +46,7 @@ void ComInputADC_clearHardFlagFun(void)
 void ComInputADC_create(void)
 {
 	S_comInputAdc.count = 0;
-	S_comInputAdc.maxCount = MAX_ADC_CONVERT_COUNT;
+	S_comInputAdc.maxCount = MAX_ADI_CONVERT_COUNT;
 	S_comInputAdc.runTime = 0;
 	S_comInputAdc.maxRunTime = 10;
 	S_comInputAdc.convertFlag = UNDONE;
@@ -54,7 +54,7 @@ void ComInputADC_create(void)
 	S_comInputAdc.maxWaitTime = 3;
 	S_comInputAdc.hardFun = ComInputADC_hardFun;
 	S_comInputAdc.aveFun = ComInputADC_aveFun;
-	S_comInputAdc.hardFlagFun = ComInputADC_hardFlagFun;
+	S_comInputAdc.hardFlagFun = ComInputADC_getHardFlagFun;
 	S_comInputAdc.clearHardFlagFun = ComInputADC_clearHardFlagFun;
 }
 void ComInputADC_destory(void)
@@ -66,14 +66,14 @@ void ComInputADC_process(void)
 	ComInput_Process(&S_comInputAdc);
 }
 
-uint16_t* ComInputADC_getDmaCountAddr(void)
+uint16_t* ComInputADC_getTempDataAddr(void)
 {
 	uint8_t count;
 	count = S_comInputAdc.count;
 	return &S_tempData[count][0];
 }
 
-P_ComInput ComInputADC_getbaseAddr(void)
+P_ComInput ComInputADC_getBaseAddr(void)
 {
 	return &S_comInputAdc;
 }

@@ -20,6 +20,15 @@
     <ClCompile Include="src\bsp\ComInputADCSpy.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
+    <ClCompile Include="src\bsp\ComInputDI_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\StackA_Test.cpp">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputDISpy.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />

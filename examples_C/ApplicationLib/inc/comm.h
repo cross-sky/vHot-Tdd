@@ -12,6 +12,7 @@
 
 #include "ComInput.h"
 #include "ComInputADC.h"
+#include "ComInputDI.h"
 
 
 #endif

@@ -3,6 +3,8 @@
 
 #include "commdata.h"
 
+#define MAX_ADI_CONVERT_COUNT 5
+
 typedef struct _ComInputStruct{
 	uint8_t count;
 	uint8_t maxCount;

@@ -2,8 +2,6 @@
 #define __COMINPUTADC_H
 #include "ComInput.h"
 
-#define MAX_ADC_CONVERT_COUNT 5
-
 typedef enum{
 	ADC0,
 	ADC1,
@@ -25,14 +23,13 @@ void ComInputADC_process(void);
 
 void ComInputADC_hardFun(void);
 void ComInputADC_aveFun(void);
-uint8_t ComInputADC_hardFlagFun(void);
+uint8_t ComInputADC_getHardFlagFun(void);
 void ComInputADC_clearHardFlagFun(void);
 
 uint16_t ComInputADC_getADCValue(uint8_t adc);
-uint16_t* ComInputADC_getDmaCountAddr(void);
+uint16_t* ComInputADC_getTempDataAddr(void);
 
-
-P_ComInput ComInputADC_getbaseAddr(void);
+P_ComInput ComInputADC_getBaseAddr(void);
 
 void ComInputADC_setData(void);
 
