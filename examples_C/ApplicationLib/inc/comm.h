@@ -14,5 +14,7 @@
 #include "ComInputADC.h"
 #include "ComInputDI.h"
 
+#include "RTCom3.h"
+
 
 #endif

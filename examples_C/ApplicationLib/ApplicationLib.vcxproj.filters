@@ -31,6 +31,13 @@
     <ClInclude Include="inc\ComInputDI.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\rtdata.h" />
+    <ClInclude Include="inc\rtcom3.h" />
+    <ClInclude Include="inc\assert.h" />
+    <ClInclude Include="inc\comm.h" />
+    <ClInclude Include="inc\except.h" />
+    <ClInclude Include="inc\mem.h" />
+    <ClInclude Include="inc\rtcom3rec.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -71,9 +78,6 @@
     <ClCompile Include="src\util\Funstate.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\StateRunFunction.c">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
     <ClCompile Include="src\bsp\ComInput.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
@@ -81,5 +85,10 @@
       <Filter>src\bsp</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInputDI.c" />
+    <ClCompile Include="src\bsp\StateRunFunction.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom3send.c" />
+    <ClCompile Include="src\bsp\RTCom3rec.c" />
   </ItemGroup>
 </Project>

@@ -4,8 +4,6 @@
 #include "Queue.h"
 #include "Event.h"
 
-
-
 typedef enum{
 	FUN_STATE_EXIT,
 	FUN_STATE_INIT,

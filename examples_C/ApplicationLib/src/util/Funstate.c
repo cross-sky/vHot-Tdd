@@ -1,7 +1,7 @@
 #include "comm.h"
 
 //创建全局队列
-static Queue_T S_que;
+static Queue_T S_sendQue;
 //事件保存地址
 static Event_T S_event[QUEUELENGTH];
 //状态函数地址
@@ -14,23 +14,23 @@ static pRunFunctions S_changeFunList[FUN_STATE_MAX];
 void Funstate_createEvent(void)
 {
 	//储存长度要转换为字节长度
-	Queue_create(&S_que, S_event, sizeof(S_event)/QUEUELENGTH);
+	Queue_create(&S_sendQue, S_event, sizeof(S_event)/QUEUELENGTH);
 }
 bool Funstate_popEvent(P_Event funEvent)
 {
-	return Queue_pop(&S_que, funEvent);
+	return Queue_pop(&S_sendQue, funEvent);
 }
 bool Funstate_pushEvent(P_Event funEvent)
 {
-	return Queue_push(&S_que, funEvent, sizeof(Event_T));
+	return Queue_push(&S_sendQue, funEvent, sizeof(Event_T));
 }
 uint16_t Funstate_lengthEvent(void)
 {
-	return Queue_length(&S_que);
+	return Queue_length(&S_sendQue);
 }
 void Funstate_destoryEvent(void)
 {
-	Queue_destory(&S_que);
+	Queue_destory(&S_sendQue);
 }
 
 void Fundata_create(P_Fundata fundata)
