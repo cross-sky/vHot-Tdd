@@ -118,6 +118,7 @@ static bool sendNext(P_RTRCFlag rcFlag)
 		return true;
 	}else
 	{
+		//not receive
 		rcFlag->sendCount++;
 		return false;
 	}
@@ -145,4 +146,12 @@ void RTCom3_SendProcess(P_RTRCFlag rcFlag)
 	//reset sendCount
 	RTCom3_popEvent(S_tDmaSend1);
 	rcFlag->sendCount = 0;
+}
+
+void RTCom3_setRecFlag(P_Event event)
+{
+	if (event->eventId == RTCOM3)
+	{
+		S_rcFlag.recFlag = DONE;
+	}
 }

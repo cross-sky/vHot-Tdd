@@ -15,6 +15,7 @@
 #include "ComInputDI.h"
 
 #include "RTCom3.h"
-
+#include "rtcom3rec.h"
+#include "relay.h"
 
 #endif

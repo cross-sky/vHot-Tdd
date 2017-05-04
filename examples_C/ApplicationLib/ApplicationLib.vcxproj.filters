@@ -1,64 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="inc\Stack_a.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\atom.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Queue.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Event.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Funstate.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\StateRunFunctions.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\commdata.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\ComInput.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\ComInputADC.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\ComInputDI.h">
-      <Filter>inc</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\rtdata.h" />
-    <ClInclude Include="inc\rtcom3.h" />
-    <ClInclude Include="inc\assert.h" />
-    <ClInclude Include="inc\comm.h" />
-    <ClInclude Include="inc\except.h" />
-    <ClInclude Include="inc\mem.h" />
-    <ClInclude Include="inc\rtcom3rec.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="src">
-      <UniqueIdentifier>{c52623e5-bb3d-4bc7-bcbd-cce460eeb8f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="inc">
-      <UniqueIdentifier>{7f4e4b82-6966-4892-8d7c-5b34f6ced4cc}</UniqueIdentifier>
+      <UniqueIdentifier>{22be97ee-e302-42fd-b6d9-be77513d4914}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\util">
-      <UniqueIdentifier>{1f87e5d6-9cb3-4885-a33e-84b8884f41b6}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{e794facd-5e05-415e-a33b-1eee7bbd9d90}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\bsp">
-      <UniqueIdentifier>{9a8f2996-9663-4690-85ef-90b3238899af}</UniqueIdentifier>
+      <UniqueIdentifier>{13e265d7-ecd0-4e71-945b-78b0c45d508b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{e5971a96-2baa-47d4-b701-9b8a268ba1b7}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\user">
-      <UniqueIdentifier>{066db108-cde9-47dc-8a78-db92845d7458}</UniqueIdentifier>
+      <UniqueIdentifier>{6260533c-fd3b-43ce-b993-a89d9155d17b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\util\Stack_a.c">
-      <Filter>src\util</Filter>
+    <ClCompile Include="src\bsp\ComInput.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputADC.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\ComInputDI.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\relay.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom3rec.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom3send.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\StateRunFunction.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\valve.c">
+      <Filter>src\bsp</Filter>
     </ClCompile>
     <ClCompile Include="src\util\assert.c">
       <Filter>src\util</Filter>
@@ -69,26 +51,22 @@
     <ClCompile Include="src\util\except.c">
       <Filter>src\util</Filter>
     </ClCompile>
+    <ClCompile Include="src\util\Funstate.c">
+      <Filter>src\util</Filter>
+    </ClCompile>
     <ClCompile Include="src\util\mem.c">
       <Filter>src\util</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Queue.c">
-      <Filter>src\bsp</Filter>
+      <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Funstate.c">
-      <Filter>src\bsp</Filter>
+    <ClCompile Include="src\util\Stack_a.c">
+      <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\bsp\ComInput.c">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bsp\ComInputADC.c">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bsp\ComInputDI.c" />
-    <ClCompile Include="src\bsp\StateRunFunction.c">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bsp\RTCom3send.c" />
-    <ClCompile Include="src\bsp\RTCom3rec.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\comm.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

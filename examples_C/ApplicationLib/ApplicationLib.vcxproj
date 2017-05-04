@@ -10,6 +10,26 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\bsp\ComInput.c" />
+    <ClCompile Include="src\bsp\ComInputADC.c" />
+    <ClCompile Include="src\bsp\ComInputDI.c" />
+    <ClCompile Include="src\bsp\relay.c" />
+    <ClCompile Include="src\bsp\RTCom3rec.c" />
+    <ClCompile Include="src\bsp\RTCom3send.c" />
+    <ClCompile Include="src\bsp\StateRunFunction.c" />
+    <ClCompile Include="src\bsp\valve.c" />
+    <ClCompile Include="src\util\assert.c" />
+    <ClCompile Include="src\util\atom.c" />
+    <ClCompile Include="src\util\except.c" />
+    <ClCompile Include="src\util\Funstate.c" />
+    <ClCompile Include="src\util\mem.c" />
+    <ClCompile Include="src\util\Queue.c" />
+    <ClCompile Include="src\util\Stack_a.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\comm.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{348076B9-303C-4FE0-9380-17CDF11134A9}</ProjectGuid>
   </PropertyGroup>
@@ -18,13 +38,11 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -102,40 +120,6 @@
       <OutputFile>./$(Configuration)/ApplicationLib.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="inc\assert.h" />
-    <ClInclude Include="inc\atom.h" />
-    <ClInclude Include="inc\ComInput.h" />
-    <ClInclude Include="inc\ComInputADC.h" />
-    <ClInclude Include="inc\ComInputDI.h" />
-    <ClInclude Include="inc\comm.h" />
-    <ClInclude Include="inc\commdata.h" />
-    <ClInclude Include="inc\Event.h" />
-    <ClInclude Include="inc\except.h" />
-    <ClInclude Include="inc\Funstate.h" />
-    <ClInclude Include="inc\mem.h" />
-    <ClInclude Include="inc\Queue.h" />
-    <ClInclude Include="inc\rtcom3.h" />
-    <ClInclude Include="inc\rtcom3rec.h" />
-    <ClInclude Include="inc\rtdata.h" />
-    <ClInclude Include="inc\Stack_a.h" />
-    <ClInclude Include="inc\StateRunFunctions.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\bsp\ComInput.c" />
-    <ClCompile Include="src\bsp\ComInputADC.c" />
-    <ClCompile Include="src\bsp\ComInputDI.c" />
-    <ClCompile Include="src\bsp\RTCom3rec.c" />
-    <ClCompile Include="src\bsp\RTCom3send.c" />
-    <ClCompile Include="src\util\assert.c" />
-    <ClCompile Include="src\util\atom.c" />
-    <ClCompile Include="src\util\except.c" />
-    <ClCompile Include="src\util\Funstate.c" />
-    <ClCompile Include="src\util\mem.c" />
-    <ClCompile Include="src\util\Queue.c" />
-    <ClCompile Include="src\util\Stack_a.c" />
-    <ClCompile Include="src\bsp\StateRunFunction.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

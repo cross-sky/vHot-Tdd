@@ -2,52 +2,55 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="AllTests.cpp" />
-    <ClCompile Include="src\bsp\Queue_Test.cpp">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bsp\Funstate_Test.cpp">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
     <ClCompile Include="src\bsp\ComInput_Test.cpp">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInputADC_Test.cpp">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\Atom_Test.cpp">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInputADCSpy.c">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInputDI_Test.cpp">
-      <Filter>src\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\StackA_Test.cpp">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\ComInputDISpy.c">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\Funstate_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\Queue_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\relay_Test.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\RTCom3_Test.cpp">
-      <Filter>src\bsp</Filter>
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom3Rec_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Atom_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\StackA_Test.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />
+    <ClInclude Include="src\bsp\ComInputADCSpy.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsp\ComInputDISpy.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{f5532758-b210-41b3-ad47-a2517b97596b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\util">
-      <UniqueIdentifier>{1ddd6d1e-b24a-4fe9-a393-c4426cf1f86a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\bsp">
-      <UniqueIdentifier>{e88a9e2c-8aca-49c2-bf19-3557d0c35b75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\user">
-      <UniqueIdentifier>{40049435-52f4-41fe-b41a-26cc4a4e4690}</UniqueIdentifier>
+      <UniqueIdentifier>{72524732-f64b-4437-ba2e-868d333d95f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

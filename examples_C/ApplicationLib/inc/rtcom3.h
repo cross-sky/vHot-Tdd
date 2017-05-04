@@ -72,7 +72,7 @@ typedef struct _RTCom3Rec1{
 	RTCom3_Data1Header header;
 	RTCom3_RData1Value_T data;
 	uint8_t crr;
-}RTCom3RFrame1_R, *P_RTCom3RFrame1;
+}RTCom3RFrame1_T, *P_RTCom3RFrame1;
 
 void RTCom3_createEvent(void);
 bool RTCom3_popEvent(void* dataAddr);
@@ -85,7 +85,7 @@ void RTCom3_SendCM1(uint8_t vHz);
 void RTCom3_SendProcess(P_RTRCFlag rcFlag);
 void RTCom3_initRCflag(P_RTRCFlag rcFlag);
 
-
-
+uint8_t RTCom3_checkXrr(void* addr, uint8_t len);
+void RTCom3_setRecFlag(P_Event event);
 #endif
 

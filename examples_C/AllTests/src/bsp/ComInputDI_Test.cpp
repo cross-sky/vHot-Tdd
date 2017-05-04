@@ -39,3 +39,5 @@ TEST(ComInputDI, convert5Times)
 		LONGS_EQUAL(1, ComInputDI_getDIValue(i));
 	}
 }
+
+
