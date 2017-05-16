@@ -51,22 +51,39 @@
     <ClCompile Include="src\util\except.c">
       <Filter>src\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Funstate.c">
-      <Filter>src\util</Filter>
-    </ClCompile>
     <ClCompile Include="src\util\mem.c">
-      <Filter>src\util</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\Queue.c">
       <Filter>src\util</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Stack_a.c">
       <Filter>src\util</Filter>
     </ClCompile>
+    <ClCompile Include="src\util\Funstate.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Queue.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\stm32_ub_led.c">
+      <Filter>src\user</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\stm32f10x_it.c">
+      <Filter>src\user</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\task.c">
+      <Filter>src\user</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\Tsystick.c">
+      <Filter>src\user</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom2.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\comm.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\RTCom2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.txt" />
   </ItemGroup>
 </Project>

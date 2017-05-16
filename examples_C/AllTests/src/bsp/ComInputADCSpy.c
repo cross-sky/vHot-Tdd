@@ -19,7 +19,7 @@ void ComInputADC_setData(void)
 	addr = ComInputADC_getTempDataAddr();
 	count = getCount();
 	count <<= 1;
-	for (i = 0; i < ADC_MAX_ENUM; i++)
+	for (i = 0; i < ADCIN_MAX_ENUM; i++)
 	{
 		*(addr + i) = count + i;
 	}

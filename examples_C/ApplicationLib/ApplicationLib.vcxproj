@@ -15,9 +15,14 @@
     <ClCompile Include="src\bsp\ComInputADC.c" />
     <ClCompile Include="src\bsp\ComInputDI.c" />
     <ClCompile Include="src\bsp\relay.c" />
+    <ClCompile Include="src\bsp\RTCom2.c" />
     <ClCompile Include="src\bsp\RTCom3rec.c" />
     <ClCompile Include="src\bsp\RTCom3send.c" />
     <ClCompile Include="src\bsp\StateRunFunction.c" />
+    <ClCompile Include="src\bsp\stm32f10x_it.c" />
+    <ClCompile Include="src\bsp\stm32_ub_led.c" />
+    <ClCompile Include="src\bsp\task.c" />
+    <ClCompile Include="src\bsp\Tsystick.c" />
     <ClCompile Include="src\bsp\valve.c" />
     <ClCompile Include="src\util\assert.c" />
     <ClCompile Include="src\util\atom.c" />
@@ -29,6 +34,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\comm.h" />
+    <ClInclude Include="inc\RTCom2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{348076B9-303C-4FE0-9380-17CDF11134A9}</ProjectGuid>
@@ -66,8 +75,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../include;./inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../include;./inc;../../CMSIS;../../FWlib/inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__CC_ARM;STM32F10X_MD;USE_STDPERIPH_DRIVER;__dsb_vs;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/ApplicationLib.pch</PrecompiledHeaderOutputFile>

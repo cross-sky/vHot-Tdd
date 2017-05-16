@@ -29,7 +29,7 @@
 //IMPORT_TEST_GROUP( CircularBuffer);
 //IMPORT_TEST_GROUP( HelloWorld);
 //IMPORT_TEST_GROUP( EventDispatcher);
-//IMPORT_TEST_GROUP( MockDocumentation);RelayTest
+//IMPORT_TEST_GROUP( MockDocumentation);ValveTest
 IMPORT_TEST_GROUP(Stack_a);
 IMPORT_TEST_GROUP(Atom);
 IMPORT_TEST_GROUP( QueueS);
@@ -40,4 +40,4 @@ IMPORT_TEST_GROUP( ComInputDI);
 IMPORT_TEST_GROUP( RTCom3);
 IMPORT_TEST_GROUP( RTCom3RecTes);
 IMPORT_TEST_GROUP( RelayTest);
-
+IMPORT_TEST_GROUP( ValveTest);

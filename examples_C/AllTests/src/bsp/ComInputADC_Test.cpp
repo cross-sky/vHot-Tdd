@@ -33,7 +33,7 @@ TEST(ComInputADC, convert5Times)
 
 	ComInputADC_process();
 
-	for (i = 0; i < ADC_MAX_ENUM; i++)
+	for (i = 0; i < ADCIN_MAX_ENUM; i++)
 	{
 		LONGS_EQUAL(4 + i, ComInputADC_getADCValue(i));
 	}

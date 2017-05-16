@@ -23,6 +23,7 @@ struct T{
 
 void Queue_create(P_Queue que, void* dataAddr, uint16_t dataSize);
 bool Queue_pop(P_Queue que, void* dstAddr);
+bool Queue_get(P_Queue que, void* dstAddr);
 bool Queue_push(P_Queue que, void* dataAddr, uint16_t dataLen);
 uint16_t Queue_length(P_Queue que);
 void Queue_destory(P_Queue que);

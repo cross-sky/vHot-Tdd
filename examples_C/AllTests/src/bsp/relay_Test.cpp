@@ -15,6 +15,8 @@ TEST_GROUP(RelayTest)
 void setup()
 {
 	s_rvData = RV_getDAddr();
+	s_rvData->relaysAndValveMainA = 0;
+	s_rvData->valveSubB = 0;
 }
 
 void teardown()

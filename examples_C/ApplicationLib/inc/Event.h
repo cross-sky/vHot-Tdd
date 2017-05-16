@@ -5,7 +5,8 @@
 
 typedef enum{
 	FUN_TYPE=1,
-	UART_TYPE
+	UART_TYPE,
+	VALVE_TYPE,
 }EVENTTYPE;
 
 typedef struct _EventStruct{

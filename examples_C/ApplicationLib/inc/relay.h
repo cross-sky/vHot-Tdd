@@ -2,6 +2,7 @@
 #define __RELAY_H
 
 #include "commdata.h"
+#include "valve.h"
 
 typedef enum{
 	RELAY1_PUMB,
@@ -22,5 +23,6 @@ typedef struct RalayVData_T{
 P_RalayVData RV_getDAddr(void);
 void RV_setRelay(RELAY_ENUM relay, DONE_ENUM isDone);
 
+void RV_valveRunDirect(VALVESTATE_ENUM addOrSub, VALVEKINDLE_ENUM valveKind);
 #endif
 

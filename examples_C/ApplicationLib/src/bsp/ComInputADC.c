@@ -1,8 +1,8 @@
 #include "comm.h"
 
-static uint16_t S_tempData[MAX_ADI_CONVERT_COUNT][ADC_MAX_ENUM];
+static uint16_t S_tempData[MAX_ADI_CONVERT_COUNT][ADCIN_MAX_ENUM];
 
-static uint16_t S_aveData[ADC_MAX_ENUM];
+static uint16_t S_aveData[ADCIN_MAX_ENUM];
 
 static uint8_t S_hardFlag = DONE;
 
@@ -24,7 +24,7 @@ void ComInputADC_aveFun(void)
 {
 	uint8_t i, j;
 	uint16_t values;
-	for (i = 0; i < ADC_MAX_ENUM ; i++)
+	for (i = 0; i < ADCIN_MAX_ENUM ; i++)
 	{
 		values = 0;
 		for (j = 0; j < MAX_ADI_CONVERT_COUNT; j ++)

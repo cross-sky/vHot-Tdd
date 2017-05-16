@@ -38,6 +38,13 @@
     <ClCompile Include="src\util\StackA_Test.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\bsp\Valve_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom2_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\spy.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />
@@ -47,6 +54,7 @@
     <ClInclude Include="src\bsp\ComInputDISpy.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\bsp\spy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

@@ -1,21 +1,22 @@
 #ifndef __COMINPUTADC_H
 #define __COMINPUTADC_H
+
 #include "ComInput.h"
 
 typedef enum{
-	ADC0,
-	ADC1,
-	ADC2,
-	ADC3,
-	ADC4,
-	ADC5,
-	ADC6,
-	ADC7,
-	ADC8,
-	ADC9,
-	ADC10,
-	ADC_MAX_ENUM
-};
+	ADCIN0,
+	ADCIN1,
+	ADCIN2,
+	ADCIN3,
+	ADCIN4,
+	ADCIN5,
+	ADCIN6,
+	ADCIN7,
+	ADCIN8,
+	ADCIN9,
+	ADCIN10,
+	ADCIN_MAX_ENUM
+}ADC_ENUM;
 
 void ComInputADC_create(void);
 void ComInputADC_destory(void);

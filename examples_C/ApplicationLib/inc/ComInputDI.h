@@ -8,7 +8,7 @@ typedef enum{
 	DI_HIGH,
 	DI_WATER,
 	DI_MAX_ENUM
-};
+}DI_ENUM;
 
 void ComInputDI_create(void);
 void ComInputDI_destory(void);
