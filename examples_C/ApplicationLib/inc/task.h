@@ -34,6 +34,8 @@ typedef enum
 {
 	TASK_LED1ON,
 	TASK_UART2,
+	TASK_ADC,
+	TASK_RV,
 	TASKS_MAX
 } TASK_LIST;
 

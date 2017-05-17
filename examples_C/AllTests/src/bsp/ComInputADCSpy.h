@@ -5,5 +5,7 @@
 
 void ComInputADCSpy_crate(void);
 
+#define ADCSPY_TESTVALUE 2110
+
 #endif
 

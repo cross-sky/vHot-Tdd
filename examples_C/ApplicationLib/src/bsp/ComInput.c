@@ -24,10 +24,10 @@ static bool checkCountConvertComplete(P_ComInput comInput)
 	return comInput->count >= comInput->maxCount;
 }
 
-static bool checkRunStageComplete(P_ComInput comInput)
-{
-	return comInput->runTime >= comInput->maxRunTime;
-}
+//static bool checkRunStageComplete(P_ComInput comInput)
+//{
+//	return comInput->runTime >= comInput->maxRunTime;
+//}
 
 static bool checkHardConvertComplete(P_ComInput comInput)
 {
@@ -86,6 +86,7 @@ void ComInput_Process(P_ComInput comInput)
 				clearWaitTime(comInput);
 				//clear hardFlag
 				comInput->clearHardFlagFun();
+				//这里需要开启硬件转换
 				comInput->hardFun();
 				//add run count
 				addRunCount(comInput);

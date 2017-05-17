@@ -30,4 +30,6 @@ P_ComInput ComInputDI_getBaseAddr(void);
 //用于测试设置值
 void ComInputDI_setDIData(void);
 
+void ComInputDI_setHardFlagFun(void);
+
 #endif

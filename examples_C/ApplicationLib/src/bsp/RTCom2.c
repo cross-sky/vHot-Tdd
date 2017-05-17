@@ -30,10 +30,11 @@ static uint8_t S_txcod4[8];
 
 static uint8_t S_setPrintADCFlag=0;
 static void recCode1(uint8_t value);
+static void recCode2(uint8_t value);
 static void recCode4(uint8_t value);
 
 static pvNormalFunU8 S_tabHandle[REC_CODE_MAX]={
-	recCode1,recCode4,recCode4,recCode4,
+	recCode1,recCode2,recCode4,recCode4,
 };
 
 static uint8_t* puartGetRTxAddress(void)
@@ -249,7 +250,7 @@ void RTCom2Rec_recProcess(void)
 
 static void recCode4(uint8_t value)
 {
-	value;
+//	value;
 	memcpy(S_txcod4, S_trec, 5);
 	vuart2DmaTxDataEnable(5, S_txcod4);
 }
@@ -264,6 +265,16 @@ static void recCode1(uint8_t value)
 	S_setPrintADCFlag = value & 0x01;
 }
 
+static void recCode2(uint8_t value)
+{
+	uint8_t isdone, relay;
+	//DONE_ENUM  isdone = value & 0x80;
+	//RELAY_ENUM ;
+	isdone = value >> 7;
+	relay = value & 0x0f;
+	RV_setRelay((RELAY_ENUM)relay, (DONE_ENUM)isdone);
+}
+
 static void task1RepeatPrintADC(void)
 {
 	uint16_t datalen;
@@ -271,7 +282,9 @@ static void task1RepeatPrintADC(void)
 	{
 		//snprintf
 		//datalen = sprintf_s((char*)TxBuff,Tx2BUF_MAX,"adc!");
-		datalen = snprintf((char*)TxBuff,Tx2BUF_MAX,"adc!");
+		//datalen = snprintf((char*)TxBuff,Tx2BUF_MAX,"adc!");
+
+		datalen = ComInputADC_printAdc((char*)TxBuff,Tx2BUF_MAX);
 		vuart2DmaTxDataEnable(datalen, TxBuff);
 	}
 }

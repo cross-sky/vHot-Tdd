@@ -2,6 +2,21 @@
 
 static RalayVData_T S_rvData={0,0};
 
+#define HC1_DS GPIO_Pin_6		//串行数据输入
+#define HC1_OE GPIO_Pin_7		//输出有效（低电平）
+#define HC1_STCP GPIO_Pin_8		//输出存储器锁存时钟线
+#define HC1_SHCP GPIO_Pin_9		//数据输入时钟线　
+#define HC1_PINS GPIO_Pin_9|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8
+
+#define HC1_H(pin) GPIOC->BSRR=pin
+#define HC1_L(pin) GPIOC->BRR=pin
+
+#define IOPORT_MAX 1
+const IOControl relaysOut[IOPORT_MAX]={
+	{HC1_PINS, GPIOC ,RCC_APB2Periph_GPIOC},
+	//{0,  VALVE_SUBB_PINS, GPIOB ,RCC_APB2Periph_GPIOB}
+};
+
 P_RalayVData RV_getDAddr(void)
 {
 	return &S_rvData;
@@ -39,7 +54,7 @@ void RV_setRelay(RELAY_ENUM relay, DONE_ENUM isDone)
 	{
 		S_rvData.relaysAndValveMainA |= 1 << relayIndex[relay];
 	}else{
-		S_rvData.relaysAndValveMainA &= 0 << relayIndex[relay];
+		S_rvData.relaysAndValveMainA &= (~(1 << relayIndex[relay]));
 	}
 }
 
@@ -67,3 +82,73 @@ void RV_valveRunDirect(VALVESTATE_ENUM addOrSub, VALVEKINDLE_ENUM valveKind)
 		S_tableIndex[valveKind]--;
 	S_tableIndex[valveKind] &= 0x07;
 }
+
+static void delay1us(void)
+{
+	uint8_t i=5;
+	i--;
+}
+
+static void vHC1DataOut(uint16_t dataOut)
+{
+	//RelaysAndValveMainA
+	uint8_t i;
+	HC1_L(HC1_SHCP);
+	HC1_L(HC1_STCP);
+	for(i=0;i<16;i++)
+	{
+		if ((dataOut<<i) & 0x8000)
+		{
+			HC1_H(HC1_DS);
+		}
+		else
+			HC1_L(HC1_DS);
+
+		HC1_L(HC1_SHCP);
+		delay1us();
+
+		HC1_H(HC1_SHCP);
+		delay1us();
+	}
+	HC1_H(HC1_STCP);
+}
+
+void RV_hwInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	uint8_t name;
+
+	//手动开CLK吧，也就几个
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+
+	for (name=0; name<IOPORT_MAX; name++)
+	{
+		//如上手动开了，就1个
+		//RCC_APB2PeriphClockCmd(controlCd4051[name].clk, ENABLE);
+		GPIO_InitStructure.GPIO_Pin = relaysOut[name].pin;
+		//这里设置为推挽输出，
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+		GPIO_Init(relaysOut[name].port, &GPIO_InitStructure);
+	}
+
+	HC1_L(HC1_OE);
+	vHC1DataOut(0);
+	//vHC1DataOut(0xffff);
+	//上电初始化
+}
+
+void RV_Task4OutProcess(void)
+{
+	static uint16_t preRelayValveA=0,preValveB=0;
+	P_RalayVData data= &S_rvData;
+
+	if (preRelayValveA != data->relaysAndValveMainA)
+	{
+		vHC1DataOut(data->relaysAndValveMainA);
+		preRelayValveA = data->relaysAndValveMainA;
+	}
+}
+
+
+

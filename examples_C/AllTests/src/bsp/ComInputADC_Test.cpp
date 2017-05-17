@@ -29,12 +29,13 @@ TEST(ComInputADC, convert5Times)
 	for (i = 0; i < 5; i ++)
 	{
 		ComInputADC_process();
+		ComInputADC_setHardFlagFun();
 	}
 
 	ComInputADC_process();
 
 	for (i = 0; i < ADCIN_MAX_ENUM; i++)
 	{
-		LONGS_EQUAL(4 + i, ComInputADC_getADCValue(i));
+		LONGS_EQUAL(4 + i + ADCSPY_TESTVALUE, ComInputADC_getADCValue(i));
 	}
 }

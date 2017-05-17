@@ -5,7 +5,7 @@
 
 extern "C"
 {
-#include "relay.h"
+#include "comm.h"
 }
 
 static P_RalayVData s_rvData;

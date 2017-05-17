@@ -14,7 +14,7 @@ typedef enum{
 	ADCIN7,
 	ADCIN8,
 	ADCIN9,
-	ADCIN10,
+//	ADCIN10,
 	ADCIN_MAX_ENUM
 }ADC_ENUM;
 
@@ -26,6 +26,7 @@ void ComInputADC_hardFun(void);
 void ComInputADC_aveFun(void);
 uint8_t ComInputADC_getHardFlagFun(void);
 void ComInputADC_clearHardFlagFun(void);
+void ComInputADC_startSimpling(void);
 
 uint16_t ComInputADC_getADCValue(uint8_t adc);
 uint16_t* ComInputADC_getTempDataAddr(void);
@@ -34,5 +35,9 @@ P_ComInput ComInputADC_getBaseAddr(void);
 
 void ComInputADC_setData(void);
 
+uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize);
+void ComInputADC_setHardFlagFun(void);
+void ComInputADC_Init(void);
+void ComInputADC_ADCDmaChannel1_ISR(void);
 #endif
 

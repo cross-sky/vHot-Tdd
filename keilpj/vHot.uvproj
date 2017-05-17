@@ -119,7 +119,7 @@
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
           <Simulator>
-            <UseSimulator>0</UseSimulator>
+            <UseSimulator>1</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -131,7 +131,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
-            <UseTarget>1</UseTarget>
+            <UseTarget>0</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -144,7 +144,7 @@
             <UsePdscDebugDescription>0</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>11</TargetSelection>
+          <TargetSelection>8</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -474,6 +474,31 @@
               <FileName>except.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\examples_C\ApplicationLib\src\util\except.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\adc_filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>ComInput.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\ComInput.c</FilePath>
+            </File>
+            <File>
+              <FileName>ComInputADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\ComInputADC.c</FilePath>
+            </File>
+            <File>
+              <FileName>relay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\relay.c</FilePath>
+            </File>
+            <File>
+              <FileName>valve.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\valve.c</FilePath>
             </File>
           </Files>
         </Group>

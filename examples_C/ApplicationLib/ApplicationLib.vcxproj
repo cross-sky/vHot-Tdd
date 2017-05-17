@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bsp\adc_filter.c" />
     <ClCompile Include="src\bsp\ComInput.c" />
     <ClCompile Include="src\bsp\ComInputADC.c" />
     <ClCompile Include="src\bsp\ComInputDI.c" />
@@ -33,6 +34,7 @@
     <ClCompile Include="src\util\Stack_a.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\adc_filter.h" />
     <ClInclude Include="inc\comm.h" />
     <ClInclude Include="inc\RTCom2.h" />
   </ItemGroup>

@@ -21,7 +21,7 @@ void ComInputADC_setData(void)
 	count <<= 1;
 	for (i = 0; i < ADCIN_MAX_ENUM; i++)
 	{
-		*(addr + i) = count + i;
+		*(addr + i) = count + i + ADCSPY_TESTVALUE;
 	}
 
 }
@@ -30,5 +30,10 @@ void ComInputADCSpy_crate(void)
 {
 	_comInputAdc = ComInputADC_getBaseAddr();
 	initComInputAdc();
+}
+
+void ComInputADC_startSimpling(void)
+{
+
 }
 

@@ -75,13 +75,19 @@
     <ClCompile Include="src\bsp\Tsystick.c">
       <Filter>src\user</Filter>
     </ClCompile>
-    <ClCompile Include="src\bsp\RTCom2.c" />
+    <ClCompile Include="src\bsp\adc_filter.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom2.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\comm.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\RTCom2.h" />
+    <ClInclude Include="inc\adc_filter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.txt" />

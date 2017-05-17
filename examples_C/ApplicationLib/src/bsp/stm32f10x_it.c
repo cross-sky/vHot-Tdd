@@ -160,6 +160,11 @@ uint32_t millis(void)
 	return sysTickUptime;
 }
 
+void DMA1_Channel1_IRQHandler(void)
+{
+	ComInputADC_ADCDmaChannel1_ISR();
+}
+
 void USART1_IRQHandler( void )
 {
 //	Usart1HandleV2();

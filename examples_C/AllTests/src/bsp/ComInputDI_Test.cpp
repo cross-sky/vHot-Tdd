@@ -30,6 +30,7 @@ TEST(ComInputDI, convert5Times)
 	for (i = 0; i < 5; i ++)
 	{
 		ComInputDI_process();
+		ComInputDI_setHardFlagFun();
 	}
 
 	ComInputDI_process();

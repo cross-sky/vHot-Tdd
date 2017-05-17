@@ -30,7 +30,7 @@ void ComInputDI_process(void)
 
 void ComInputDI_hardFun(void)
 {
-	S_hardFlag = DONE;
+	//S_hardFlag = DONE;
 	ComInputDI_setDIData();
 }
 void ComInputDI_aveFun(void)
@@ -55,6 +55,11 @@ uint8_t ComInputDI_getHardFlagFun(void)
 void ComInputDI_clearHardFlagFun(void)
 {
 	S_hardFlag = UNDONE;
+}
+
+void ComInputDI_setHardFlagFun(void)
+{
+	S_hardFlag = DONE;
 }
 
 uint16_t* ComInputDI_getTempDataAddr(void)
