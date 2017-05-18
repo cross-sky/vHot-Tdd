@@ -8,7 +8,7 @@ TPC_TASK TaskComps[]=
 	{0, 0, 301,  301, LED1on},			// 5*200=1s   ok	RTCom2_task
 	{0, 0, 302,  302, RTCom2_task},		//  rtcom2 test
 	{0, 0, 20, 20, ComInputADC_process},//ADC
-	{0, 0, 21,  21, RV_Task4OutProcess},	//rvout
+	{0, 0, 6,  6, Valve_taskProcess},	//rvout
 //	{0, 0, 4,  4, UartDmaSendV2},
 	//{0, 0, 1,  1, UartDmaSend},
 };
@@ -24,9 +24,9 @@ void TaskInit(void)
 	UART2_Init();
 	ComInputADC_Init();
 	RV_hwInit();
+	Valve_hwInit();
 	//@@@@@@@@@显示板要延时一点才启动，不过也没关系，后面有重发
 }
-
 
 
 void TPCRemarks( TPC_TASK *pTask)

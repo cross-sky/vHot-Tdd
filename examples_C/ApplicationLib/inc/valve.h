@@ -16,9 +16,9 @@ typedef enum{
 }VALVESTATE_ENUM;
 
 typedef enum{
-	VALVE_MAINA,
-	VALVE_SUBB,
-	VALVE_MAX,
+	VALVE_TYPE_MAINA,
+	VALVE_TYPE_SUBB,
+	VALVE_TYPE_MAX,
 }VALVEKINDLE_ENUM;
 
 typedef struct EventValve_T{
@@ -30,7 +30,7 @@ typedef struct EventValve_T{
 typedef struct {
 	DONE_ENUM isDone;
 	int16_t totalSteps;
-	int16_t curSteps;
+//	int16_t curSteps;
 	int16_t runSteps;
 	VALVESTATE_ENUM runDirect;
 	VALVESTATE_ENUM isUsed;
@@ -44,5 +44,12 @@ uint16_t Valve_lenEvent(void);
 void Valve_destoryEvent(void);
 void Valve_ProcessEvent(VALVEKINDLE_ENUM valveKind);
 uint16_t Valve_getState(VALVEKINDLE_ENUM valveKind);
+void Valve_taskProcess(void);
+void Valve_hwInit(void);
+
+
+void RV_clearValveValue(VALVEKINDLE_ENUM valveKind);
+int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle);
+
 #endif
 

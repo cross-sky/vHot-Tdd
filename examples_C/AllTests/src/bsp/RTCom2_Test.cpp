@@ -11,7 +11,7 @@ extern "C"
 #define bit_funcode 2
 #define bit_value 3
 
-static uint8_t baseData[5]={
+static uint8_t baseData[8]={
 	0xca, 0xca, 0xf0, 0x01, 0xaa
 };
 
@@ -47,4 +47,10 @@ TEST(RTCOM2_TEST, recFuncode0xf1)
 	RTCom2Rec_pushEvent(&src, 5);
 	RTCom2_task();
 	//LONGS_EQUAL(1, RTCom2Rec_getPrintADCFlag());
+
+	src[bit_funcode] = 0xf2;
+	src[bit_value] = 0x01;
+	src[bit_value+1] = 0x1f;
+	RTCom2Rec_pushEvent(&src, 5);
+	RTCom2_task();
 }

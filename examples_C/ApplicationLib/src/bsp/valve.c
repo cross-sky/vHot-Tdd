@@ -5,9 +5,9 @@ static Queue_T S_sendQue;
 //事件保存地址
 static EventValve_T S_event[QUEUELENGTH];
 
-static ValveStatus_T S_valveTab[VALVE_MAX]={
-	{DONE, 500, 0, 0, VALVE_HOLD, VALVE_USED},
-	{DONE, 500, 0, 0, VALVE_HOLD, VALVE_USED},
+static ValveStatus_T S_valveTab[VALVE_TYPE_MAX]={
+	{DONE, 500, 0,  VALVE_HOLD, VALVE_USED},
+	{DONE, 500, 0,  VALVE_HOLD, VALVE_USED},
 };
 
 typedef enum {
@@ -19,14 +19,20 @@ typedef enum {
 }STEPS_Enum;
 
 #define  VALVE_INIT_STEP   -560
-#define VALVE_CLOSE_STEP  8
+#define VALVE_CLOSE_STEP  520
 #define VALVE_MIN_STEP 30
 #define VALVE_MAX_STEP 470
 
-static int16_t S_stepsTab[VALVE_MAX][ValveEnumMax]={
+static int16_t S_stepsTab[VALVE_TYPE_MAX][ValveEnumMax]={
 	{VALVE_INIT_STEP,VALVE_CLOSE_STEP,VALVE_MIN_STEP,VALVE_MAX_STEP},
 	{VALVE_INIT_STEP,VALVE_CLOSE_STEP,VALVE_MIN_STEP,VALVE_MAX_STEP-200}
 };
+
+static bool isValveUsed(VALVEKINDLE_ENUM valveKind)
+{
+	return S_valveTab[valveKind].isUsed == VALVE_USED;
+}
+
 
 void Valve_createEvent(void)
 {
@@ -43,6 +49,10 @@ bool Valve_getEvent(P_EventValve event)
 }
 bool Valve_pushEvent(P_EventValve event)
 {
+	if (!isValveUsed((VALVEKINDLE_ENUM)event->event.eventId))
+	{
+		return false;
+	}
 	return Queue_push(&S_sendQue, event, sizeof(EventValve_T));
 }
 uint16_t Valve_lenEvent(void)
@@ -59,10 +69,6 @@ static bool isValveDone(VALVEKINDLE_ENUM valveKind)
 	return S_valveTab[valveKind].isDone == DONE;
 }
 
-static bool isValveUsed(VALVEKINDLE_ENUM valveKind)
-{
-	return S_valveTab[valveKind].isUsed == VALVE_USED;
-}
 
 static void checkTotalSteps(P_EventValve event)
 {
@@ -81,8 +87,8 @@ static void checkTotalSteps(P_EventValve event)
 		}else
 		{
 			//close
-			valve->runSteps = 0 - (S_stepsTab[valveKind][IndexCloseStep] + valve->totalSteps);
-			valve->totalSteps = 0;
+			valve->runSteps = S_stepsTab[valveKind][IndexCloseStep] - valve->totalSteps;
+			valve->totalSteps = 500;
 		}
 	}
 	//开度有限制 确保totalstep和runstep在范围内
@@ -92,7 +98,7 @@ static void checkTotalSteps(P_EventValve event)
 			valve->runSteps = S_stepsTab[valveKind][IndexMaxStep] - valve->totalSteps;
 			valve->totalSteps = S_stepsTab[valveKind][IndexMaxStep];
 		}
-		else if ((valve->totalSteps + tcode) < S_stepsTab[valveKind][IndexMaxStep])
+		else if ((valve->totalSteps + tcode) < S_stepsTab[valveKind][IndexMinStep])
 		{
 			valve->runSteps = S_stepsTab[valveKind][IndexMinStep] - valve->totalSteps;
 			valve->totalSteps = S_stepsTab[valveKind][IndexMinStep];
@@ -127,7 +133,7 @@ static void valveRunDone(VALVEKINDLE_ENUM valveKind)
 			setValveState(DONE, valveKind);
 			//2. 步数结束时，先将电子膨胀阀的值清0，避免通电发热
 			//3.刚开机时，会从步数1开始
-
+			RV_clearValveValue(valveKind);
 		}
 		i++;
 	}
@@ -164,8 +170,9 @@ static void valveRun(VALVEKINDLE_ENUM valveKind)
 void Valve_ProcessEvent(VALVEKINDLE_ENUM valveKind)
 {
 	EventValve_T event;
-	if (!isValveUsed(valveKind))
-		return;
+	//@@@@@发送后，设置为未使用，事件就无法处理
+	//if (!isValveUsed(valveKind))
+	//	return;
 
 	if (Valve_getEvent(&event))
 	{
@@ -189,3 +196,35 @@ uint16_t Valve_getState(VALVEKINDLE_ENUM valveKind)
 	return S_valveTab[valveKind].isDone;
 }
 
+void Valve_taskProcess(void)
+{
+	Valve_ProcessEvent(VALVE_TYPE_MAINA);
+	Valve_ProcessEvent(VALVE_TYPE_SUBB);
+
+	//update HWdata
+	RV_Task4OutProcess();
+}
+
+void Valve_hwInit(void)
+{
+	EventValve_T initEvent;
+	Valve_createEvent();
+	//send init event
+
+	initEvent.event.eventType = VALVE_TYPE;
+	initEvent.event.eventId = VALVE_TYPE_SUBB;
+	initEvent.code = 30;
+	initEvent.state = VALVE_INIT;
+	Valve_pushEvent(&initEvent);
+	initEvent.event.eventId = VALVE_TYPE_MAINA;
+	Valve_pushEvent(&initEvent);
+}
+
+int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle)
+{
+	if (valvekindle < VALVE_TYPE_MAX)
+	{
+		return S_valveTab[valvekindle].totalSteps;
+	}
+	return 0;
+}

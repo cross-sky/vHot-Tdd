@@ -33,9 +33,14 @@ void teardown()
 
 TEST(QueueS, pushAndPop)
 {
+	src = 1000;
+	Queue_push(&_queue, &src, sizeof(int));
+	src = 1100;
 	Queue_push(&_queue, &src, sizeof(int));
 	Queue_pop(&_queue, &dst);
-	LONGS_EQUAL(dst, src);
+	LONGS_EQUAL(dst, 1000);
+	Queue_pop(&_queue, &dst);
+	LONGS_EQUAL(dst, 1100);
 }
 
 

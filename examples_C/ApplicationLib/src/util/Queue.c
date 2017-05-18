@@ -1,7 +1,6 @@
 #include "comm.h"
 #include <string.h>
 
-
 void Queue_create(P_Queue que, void* dataAddr, uint16_t dataSize)
 {
 	uint8_t i;
@@ -23,7 +22,12 @@ bool Queue_pop(P_Queue que, void* dstAddr)
 		return false;
 	}
 	memcpy(dstAddr, que->data.buff[que->out], que->data.len[que->out]);
-	que->out = (que->out++)%que->maxSize;
+	//que->out = (que->out+1)%que->maxSize;
+	//que->out++;
+	if (++que->out >=  que->maxSize)
+	{
+		que->out = 0;
+	}
 	que->qLen--;
 	return true;
 }
@@ -53,7 +57,12 @@ bool Queue_push(P_Queue que, void* dataAddr, uint16_t dataLen)
 
 	memcpy(que->data.buff[que->in], dataAddr, dataLen);
 	que->data.len[que->in] = dataLen;
-	que->in = (que->in++)%que->maxSize;
+	//que->in++;
+	//que->in = (que->in+1)%que->maxSize;
+	if (++que->in >=  que->maxSize)
+	{
+		que->in = 0;
+	}
 	que->qLen++;
 	return true;
 }

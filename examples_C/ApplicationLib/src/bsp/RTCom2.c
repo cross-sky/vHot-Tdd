@@ -31,10 +31,11 @@ static uint8_t S_txcod4[8];
 static uint8_t S_setPrintADCFlag=0;
 static void recCode1(uint8_t value);
 static void recCode2(uint8_t value);
+static void recCode3(uint8_t value);
 static void recCode4(uint8_t value);
 
 static pvNormalFunU8 S_tabHandle[REC_CODE_MAX]={
-	recCode1,recCode2,recCode4,recCode4,
+	recCode1,recCode2,recCode3,recCode4,
 };
 
 static uint8_t* puartGetRTxAddress(void)
@@ -273,6 +274,19 @@ static void recCode2(uint8_t value)
 	isdone = value >> 7;
 	relay = value & 0x0f;
 	RV_setRelay((RELAY_ENUM)relay, (DONE_ENUM)isdone);
+}
+
+static void recCode3(uint8_t value)
+{
+	EventValve_T eve;
+	uint8_t valveKindle = value >> 7;
+	uint8_t state = value & 0x03;
+
+	eve.event.eventType = VALVE_TYPE;
+	eve.event.eventId = (VALVEKINDLE_ENUM)valveKindle;
+	eve.code = (int8_t)S_trec[BIT_FUNVALUE+1];
+	eve.state = (VALVESTATE_ENUM)state;
+	Valve_pushEvent(&eve);
 }
 
 static void task1RepeatPrintADC(void)

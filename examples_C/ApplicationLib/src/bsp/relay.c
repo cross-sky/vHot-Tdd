@@ -8,13 +8,15 @@ static RalayVData_T S_rvData={0,0};
 #define HC1_SHCP GPIO_Pin_9		//数据输入时钟线　
 #define HC1_PINS GPIO_Pin_9|GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8
 
+#define VALVE_SUBB_PINS GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15
+
 #define HC1_H(pin) GPIOC->BSRR=pin
 #define HC1_L(pin) GPIOC->BRR=pin
 
-#define IOPORT_MAX 1
+#define IOPORT_MAX 2
 const IOControl relaysOut[IOPORT_MAX]={
 	{HC1_PINS, GPIOC ,RCC_APB2Periph_GPIOC},
-	//{0,  VALVE_SUBB_PINS, GPIOB ,RCC_APB2Periph_GPIOB}
+	{VALVE_SUBB_PINS, GPIOB ,RCC_APB2Periph_GPIOB}
 };
 
 P_RalayVData RV_getDAddr(void)
@@ -31,12 +33,12 @@ const uint8_t relayIndex[16]={
 	15,14,10,13,13,13, 13,13
 };
 //电子膨胀阀对应的通电相数 
-const uint16_t S_tableValve[VALVE_MAX][8]={
+const uint16_t S_tableValve[VALVE_TYPE_MAX][8]={
 	{0x1000,0x1800,	0x0800,	0x0c00,	0x0400,	0x0600,	0x0200,	0x1200},
 	{0x8000,0xc000,	0x4000,	0x6000,	0x2000,	0x3000,	0x1000,	0x9000}
 };
 //电子膨胀阀当前拍数，0-8
-uint8_t S_tableIndex[VALVE_MAX]={0,0};
+static uint8_t S_tableIndex[VALVE_TYPE_MAX]={0,0};
 
 //电子膨胀阀A的bit位置
 #define ValveMainABits 0x1e00
@@ -62,12 +64,12 @@ void RV_valveRunDirect(VALVESTATE_ENUM addOrSub, VALVEKINDLE_ENUM valveKind)
 {
 	switch(valveKind)
 	{
-	case VALVE_MAINA:
+	case VALVE_TYPE_MAINA:
 		{
 			S_rvData.relaysAndValveMainA = (S_rvData.relaysAndValveMainA & (~ValveMainABits)) | S_tableValve[valveKind][S_tableIndex[valveKind]];
 			break;
 		}
-	case VALVE_SUBB:
+	case VALVE_TYPE_SUBB:
 		{
 			S_rvData.valveSubB = (S_rvData.valveSubB & (~ValVeSubBBits)) | S_tableValve[valveKind][S_tableIndex[valveKind]];
 			break;
@@ -81,6 +83,22 @@ void RV_valveRunDirect(VALVESTATE_ENUM addOrSub, VALVEKINDLE_ENUM valveKind)
 	else
 		S_tableIndex[valveKind]--;
 	S_tableIndex[valveKind] &= 0x07;
+}
+
+void RV_clearValveValue(VALVEKINDLE_ENUM valveKind)
+{
+	switch(valveKind)
+	{
+	case VALVE_TYPE_MAINA:
+		//2.电子膨胀阀值清0
+		S_rvData.relaysAndValveMainA &=(~ValveMainABits); 
+		break;
+	case VALVE_TYPE_SUBB:
+		S_rvData.valveSubB &=(~ValVeSubBBits);
+		break;
+	default:
+		break;
+	}
 }
 
 static void delay1us(void)
@@ -138,6 +156,14 @@ void RV_hwInit(void)
 	//上电初始化
 }
 
+static void vValveSubDataOut(uint16_t dataOut)
+{
+	uint16_t tt;
+	tt =  GPIOB->IDR & (~ValVeSubBBits);
+	tt |= dataOut;
+	GPIOB->ODR = tt;
+}
+
 void RV_Task4OutProcess(void)
 {
 	static uint16_t preRelayValveA=0,preValveB=0;
@@ -147,6 +173,12 @@ void RV_Task4OutProcess(void)
 	{
 		vHC1DataOut(data->relaysAndValveMainA);
 		preRelayValveA = data->relaysAndValveMainA;
+	}
+
+	if (preValveB != data->valveSubB)
+	{
+		preValveB = data->valveSubB;
+		vValveSubDataOut(data->valveSubB);
 	}
 }
 

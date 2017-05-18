@@ -17,7 +17,7 @@ void setup()
 {
 	Valve_createEvent();
 	src.event.eventType = VALVE_TYPE;
-	src.event.eventId = VALVE_MAINA;
+	src.event.eventId = VALVE_TYPE_MAINA;
 	src.code = runcode;
 	src.state = VALVE_RUN;
 }
@@ -43,9 +43,9 @@ TEST(ValveTest, processEvent)
 	Valve_pushEvent(&src);
 	for (i = 0; i<= runcode + 10; i++)
 	{
-		Valve_ProcessEvent(VALVE_MAINA);
-		LONGS_EQUAL(UNDONE, Valve_getState(VALVE_MAINA));
+		Valve_ProcessEvent(VALVE_TYPE_MAINA);
+		LONGS_EQUAL(UNDONE, Valve_getState(VALVE_TYPE_MAINA));
 	}
-	Valve_ProcessEvent(VALVE_MAINA);
-	LONGS_EQUAL(DONE, Valve_getState(VALVE_MAINA));
+	Valve_ProcessEvent(VALVE_TYPE_MAINA);
+	LONGS_EQUAL(DONE, Valve_getState(VALVE_TYPE_MAINA));
 }
