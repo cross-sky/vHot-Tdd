@@ -500,6 +500,11 @@
               <FileType>1</FileType>
               <FilePath>..\examples_C\ApplicationLib\src\bsp\valve.c</FilePath>
             </File>
+            <File>
+              <FileName>RTCom1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\RTCom1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -25,6 +25,7 @@ void TaskInit(void)
 	ComInputADC_Init();
 	RV_hwInit();
 	Valve_hwInit();
+	RTCom1_init();
 	//@@@@@@@@@显示板要延时一点才启动，不过也没关系，后面有重发
 }
 
@@ -59,6 +60,18 @@ void TPCProcess(TPC_TASK *pTask)
 			pTask[i].Run = TPC_RUN_CLM;
 		}
 
+	}
+}
+
+void Task_changeLedTime(uint8_t normals)
+{
+	if (normals & 0x01)
+	{
+		TaskComps[TASK_LED1ON].ItvTime = 101;
+	}
+	else
+	{
+		TaskComps[TASK_LED1ON].ItvTime = 301;
 	}
 }
 

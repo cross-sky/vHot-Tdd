@@ -24,6 +24,7 @@
     <ClCompile Include="src\bsp\stm32_ub_led.c" />
     <ClCompile Include="src\bsp\task.c" />
     <ClCompile Include="src\bsp\Tsystick.c" />
+    <ClCompile Include="src\bsp\RTCom1.c" />
     <ClCompile Include="src\bsp\valve.c" />
     <ClCompile Include="src\util\assert.c" />
     <ClCompile Include="src\util\atom.c" />
@@ -37,6 +38,7 @@
     <ClInclude Include="inc\adc_filter.h" />
     <ClInclude Include="inc\comm.h" />
     <ClInclude Include="inc\RTCom2.h" />
+    <ClInclude Include="inc\RTcom1.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.txt" />

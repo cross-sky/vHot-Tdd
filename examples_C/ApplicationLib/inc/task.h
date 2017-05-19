@@ -44,5 +44,8 @@ extern void TPCRemarks( TPC_TASK *pTask);
 extern void TPCProcess(TPC_TASK *pTask);
 extern TPC_TASK TaskComps[];
 
+void Task_changeLedTime(uint8_t normals);
+
+
 #endif
 

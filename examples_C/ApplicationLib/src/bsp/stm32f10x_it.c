@@ -167,17 +167,17 @@ void DMA1_Channel1_IRQHandler(void)
 
 void USART1_IRQHandler( void )
 {
-//	Usart1HandleV2();
+	Usart1_IdlHandle_ISR();
 }
 
 void DMA1_Channel5_IRQHandler(void)
 {
-//	Dma1ChRxHandle();
+	Uart1_DmaRxHandle_ISR();
 }
 
 void DMA1_Channel4_IRQHandler(void)
 {
-	//Dma1ChTxHandleV2();
+	Uart1_DmaTxHandler_ISR();
 }
 
 void USART2_IRQHandler( void )
