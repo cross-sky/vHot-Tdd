@@ -16,11 +16,12 @@ static uint8_t S_tDmaSend1[RTLEN];
 
 //Pa8 re pin
 #define RS485EN_H(pin) GPIOA->BSRR=pin
-#define RS485EN_L(pin) GPIOA->BRR=pin
+#define IO_L(pin) GPIOA->BRR=pin
 
 static uint8_t RxBuff[Rx3BUF_MAX]={0};
 
 static RTRCFlag_T S_rcFlag;
+
 
 void RTCom3_initRCflag(P_RTRCFlag rcFlag)
 {
@@ -270,15 +271,16 @@ void UART3_Init(void)
 
 	//空闲中断
 	USART_ITConfig(RS485_UART3, USART_IT_IDLE , ENABLE);//
+
+	//这里开启发送完成中断，中断函数设置re=0；
+	//USART_ClearFlag(RS485_UART3, USART_IT_TC);     //* 清发送外城标志，USART_FLAG_TC
+	USART_ClearITPendingBit(USART3, USART_IT_TC);
+	USART_ITConfig(RS485_UART3, USART_IT_TC , ENABLE);//
+
 	USART_Cmd(RS485_UART3, ENABLE);
-	USART_ClearFlag(RS485_UART3, USART_FLAG_TC);     //* 清发送外城标志，
-
-	//RTCom2_paraInit();
-
-	RS485EN_H(RS485_RePin);
-
+	
 	//set to rx mode,set to low
-	RS485EN_L(RS485_RePin);
+	IO_L(RS485_RePin);
 }
 
 void Uart3_DmaTxHandler_ISR(void)
@@ -286,9 +288,10 @@ void Uart3_DmaTxHandler_ISR(void)
 	DMA_ClearITPendingBit(DMA1_IT_TC2|DMA1_IT_TE2);
 	DMA_Cmd(DMA1_Ch_Usart3_Tx, DISABLE);
 	
+	//或者直接在中断里面等待发送为空
+	//while(!USART_GetFlagStatus(RS485_UART3, USART_FLAG_TC));
 	//set back to rec mode ,re = 0
-	RS485EN_L(RS485_RePin);
-	//vUart2_setTxStateOn();
+	//RS485EN_L(RS485_RePin);
 }
 
 void Uart3_DmaRxHandle_ISR(void)
@@ -310,13 +313,23 @@ void vuart3DmaTxDataEnable(uint16_t len, uint8_t *address)
 	DMA1_Ch_Usart3_Tx->CMAR =(uint32_t)address;
 
 	DMA_Cmd(DMA1_Ch_Usart3_Tx,ENABLE);
+
+	//在这里开启发送完成中断，或者不开。。。。
+	//USART_ITConfig(RS485_UART3, USART_IT_TC , ENABLE);//
 }
 
 void Usart3_IdlHandle_ISR(void)
 {
 	uint16_t DataLen;
 	uint8_t i = 0;
-	//if (1)
+
+	if (USART_GetITStatus(USART3, USART_IT_TC) != RESET)
+	{
+		IO_L(RS485_RePin);
+		USART_ClearITPendingBit(USART3, USART_IT_TC);
+		return;
+	}
+
 	if (USART_GetITStatus(USART3, USART_IT_IDLE) != RESET)
 	{
 		DMA_Cmd(DMA1_Ch_Usart3_Rx, DISABLE);
