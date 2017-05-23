@@ -7,6 +7,24 @@ typedef enum{
 	RTCOM3,
 }RTCOM;
 
+#define RS485_UART3				USART3
+#define RS485_GPIO				GPIOB
+#define RS485_UART3_CLK			RCC_APB1Periph_USART3
+#define RS485_GPIO_CLK			RCC_APB2Periph_GPIOB
+
+#define RS485_RxPin				GPIO_Pin_11
+#define RS485_TxPin				GPIO_Pin_10	//GPIOB
+#define RS485_RePin				GPIO_Pin_8	//GPIOA
+
+//这是一个双向寄存器，包含了TDR和RDR，对它读操作，读取的是RDR寄存器的值，对它的写操作，实际上是写到TDR寄存器的
+#define USART3_Tx_DR_Base		0x40004804
+#define DMA1_Ch_Usart3_Tx		DMA1_Channel2
+#define DMA1_Ch_Usart3_Tx_IRQn	DMA1_Channel2_IRQn
+
+#define USART3_Rx_DR_Base		0x40004804
+#define DMA1_Ch_Usart3_Rx		DMA1_Channel3
+#define DMA1_Ch_Usart3_Rx_IRQn	DMA1_Channel3_IRQn
+
 
 typedef struct _RTHeader{
 	Event_T event;
@@ -87,5 +105,11 @@ void RTCom3_initRCflag(P_RTRCFlag rcFlag);
 
 uint8_t RTCom3_checkXrr(void* addr, uint8_t len);
 void RTCom3_setRecFlag(P_Event event);
+
+void UART3_Init(void);
+void Uart3_DmaTxHandler_ISR(void);
+void Uart3_DmaRxHandle_ISR(void);
+void Usart3_IdlHandle_ISR(void);
+
 #endif
 

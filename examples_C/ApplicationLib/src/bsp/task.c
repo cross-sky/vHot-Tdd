@@ -26,6 +26,7 @@ void TaskInit(void)
 	RV_hwInit();
 	Valve_hwInit();
 	RTCom1_init();
+	UART3_Init();
 	//@@@@@@@@@显示板要延时一点才启动，不过也没关系，后面有重发
 }
 

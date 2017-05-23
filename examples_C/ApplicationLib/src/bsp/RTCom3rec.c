@@ -12,7 +12,6 @@ static uint8_t S_trec[RTCOM3_DMALEN];
 
 #define RTCOM3_HEADER 0x7e
 
-
 void RTCom3Rec_createEvent(void)
 {
 	Queue_create(&S_recQue, S_recData, RTLEN);

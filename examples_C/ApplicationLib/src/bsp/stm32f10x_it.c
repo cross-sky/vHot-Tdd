@@ -187,14 +187,31 @@ void USART2_IRQHandler( void )
 
 void DMA1_Channel6_IRQHandler(void)
 {
-	//tx
+	//rx
 	vUart2DmaRxHandle_ISR();
 }
 
 void DMA1_Channel7_IRQHandler(void)
 {
-	//rx
+	//tx
 	vUart2DmaTxHandler_ISR();
+}
+
+void USART3_IRQHandler( void )
+{
+	Usart3_IdlHandle_ISR();
+}
+
+void DMA1_Channel3_IRQHandler(void)
+{
+	//rx
+	Uart3_DmaRxHandle_ISR();
+}
+
+void DMA1_Channel2_IRQHandler(void)
+{
+	//tx
+	Uart3_DmaTxHandler_ISR();
 }
 
 /******************************************************************************/
