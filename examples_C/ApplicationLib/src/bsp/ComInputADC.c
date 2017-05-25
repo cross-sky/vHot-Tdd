@@ -78,6 +78,8 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 	}
 	len += snprintf(dst + len, maxSize - len,"VA-%d,", Valve_getTotalSteps(VALVE_TYPE_MAINA));
 	len += snprintf(dst + len, maxSize - len,"VB-%d,", Valve_getTotalSteps(VALVE_TYPE_SUBB));
+	//
+	len += snprintf(dst + len, maxSize - len,"DR-%d,", RTCom3_getCount());
 	len  += snprintf(dst + len, maxSize - len, "\r\n");
 	return len;
 }

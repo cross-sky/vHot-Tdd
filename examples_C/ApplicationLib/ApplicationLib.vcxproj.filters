@@ -82,6 +82,7 @@
       <Filter>src\bsp</Filter>
     </ClCompile>
     <ClCompile Include="src\bsp\RTCom1.c" />
+    <ClCompile Include="src\bsp\MainData.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\comm.h">
@@ -90,6 +91,7 @@
     <ClInclude Include="inc\RTCom2.h" />
     <ClInclude Include="inc\adc_filter.h" />
     <ClInclude Include="inc\RTcom1.h" />
+    <ClInclude Include="inc\MainData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.txt" />

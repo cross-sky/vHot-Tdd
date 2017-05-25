@@ -9,6 +9,7 @@ TPC_TASK TaskComps[]=
 	{0, 0, 302,  302, RTCom2_task},		//  rtcom2 test
 	{0, 0, 20, 20, ComInputADC_process},//ADC
 	{0, 0, 6,  6, Valve_taskProcess},	//rvout 
+	{0, 0, 300,  300, UART3_RTProcess}, //rs485
 //	{0, 0, 4,  4, UartDmaSendV2},
 	//{0, 0, 1,  1, UartDmaSend},
 };
@@ -19,6 +20,9 @@ void TaskInit(void)
 	//“组”优先级别>“抢”占优先级别>“副”优先级别
 	//数值越小所代表的优先级就越高,有必要设置组0
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
+	MainData_initPara();
+
 	UB_LED_Init();		//PC1,PC3,PC13  ok	
 	SystickInit();
 	UART2_Init();

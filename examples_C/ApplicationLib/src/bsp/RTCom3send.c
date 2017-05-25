@@ -3,16 +3,21 @@
 #define RTLEN 40
 
 //创建全局队列
-static Queue_T S_sendQue;
-static uint8_t S_sendData[QUEUELENGTH][RTLEN];
+static Queue_T S_recvQue;
+static uint8_t S_recvData[QUEUELENGTH][RTLEN];
 
 //临时存储帧发送1
 static uint8_t S_tsend1[RTLEN];
 
 static uint8_t S_tDmaSend1[RTLEN];
+static uint8_t S_trec[RTLEN];
 
 #define Bounds 9600
 #define Rx3BUF_MAX 40
+
+#define RTCOM3_HEADER 0x7e
+#define RTCOM3_DSTADDR 0xc0
+#define RTCOM3_SRCADDR 0x00
 
 //Pa8 re pin
 #define RS485EN_H(pin) GPIOA->BSRR=pin
@@ -22,14 +27,13 @@ static uint8_t RxBuff[Rx3BUF_MAX]={0};
 
 static RTRCFlag_T S_rcFlag;
 
-
 void RTCom3_initRCflag(P_RTRCFlag rcFlag)
 {
 	rcFlag->event.eventType = UART_TYPE;
 	rcFlag->event.eventId = RTCOM3;
 	rcFlag->recFlag = DONE;
 	rcFlag->sendCount = 0;
-	rcFlag->sendCountMax = 3;
+	rcFlag->sendCountMax = 60;
 }
 
 static uint8_t* getSend1FrameHeaderAddr(void)
@@ -44,24 +48,73 @@ static uint8_t* getSend1FrameDataAddr(void)
 
 void RTCom3_createEvent(void)
 {
-	Queue_create(&S_sendQue, S_sendData, RTLEN);
+	Queue_create(&S_recvQue, S_recvData, RTLEN);
 	RTCom3_initRCflag(&S_rcFlag);
 }
 bool RTCom3_popEvent(void* dataAddr)
 {
-	return Queue_pop(&S_sendQue, dataAddr);
+	return Queue_pop(&S_recvQue, dataAddr);
 }
 bool RTCom3_pushEvent(void* dataAddr, uint16_t dataLen)
 {
-	return Queue_push(&S_sendQue, dataAddr, dataLen);
+	return Queue_push(&S_recvQue, dataAddr, dataLen);
 }
 uint16_t RTCom3_lengthEvent(void)
 {
-	return Queue_length(&S_sendQue);
+	return Queue_length(&S_recvQue);
 }
 void RTCom3_destoryEvent(void)
 {
-	Queue_destory(&S_sendQue);
+	Queue_destory(&S_recvQue);
+}
+
+//rec
+bool RTCom3_checkRecFrame(void* addr)
+{
+	uint8_t len, xrrResult;
+	RTCom3_Data1Header* rec = (RTCom3_Data1Header*)addr;
+	len = rec->len + sizeof(RTCom3_Data1Header) - 2;
+	//check dstAddr
+	if (rec->dstAddr != 0x00)
+	{
+		return false;
+	}
+
+	//check srcAddr
+
+	//check fun code
+	if (rec->funCode != 0x03)
+	{
+		return false;
+	}
+
+	xrrResult = RTCom3_checkXrr(rec, len);
+	if (xrrResult != *((uint8_t*)addr + len))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool RTCom3_recProcess(void)
+{
+	if (RTCom3_lengthEvent() == 0)
+	{
+		return false;
+	}
+
+	RTCom3_popEvent(S_trec);
+
+	if (!RTCom3_checkRecFrame(S_trec))
+	{
+		return false;
+	}
+	
+	//update data
+	//@@@@@@@@@@
+	MainData_rxConvert((P_RTCom3RFrame1)S_trec);
+	return true;
 }
 
 uint8_t RTCom3_checkXrr(void* addr, uint8_t len)
@@ -70,116 +123,89 @@ uint8_t RTCom3_checkXrr(void* addr, uint8_t len)
 	uint8_t* src = (uint8_t*)addr;
 	while(len > 0)
 	{
-		result ^= *src++;
+		result ^= *(src++);
 		len--;
 	}
 	return result;
 }
 
 
-void RTCom3_SendCM1(uint8_t vHz)
+void RTCom3_SendCM1(void)
 {
 	//add header, data
-	P_RTHeader frameHeader;
 	P_RTCom3SFrame1 frameData;
 	uint8_t xrrLen;
-	xrrLen = sizeof(RTHeader_T) + sizeof(RTCom3SFrame1_T);
-
-	frameHeader = (P_RTHeader)getSend1FrameHeaderAddr();
+	xrrLen = sizeof(RTCom3SFrame1_T);
 	frameData = (P_RTCom3SFrame1)getSend1FrameDataAddr();
 
-	frameHeader->event.eventType = UART_TYPE;
-	frameHeader->event.eventId = RTCOM3;
-	frameHeader->len = sizeof(RTCom3SFrame1_T);
-
-	frameData->header.header1 = 0x7e;
-	frameData->header.header2 = 0x7e;
-	frameData->header.dstAddr = 0xc0;
-	frameData->header.srcAddr = 0x00;
+	frameData->header.header1 = RTCOM3_HEADER;
+	frameData->header.header2 = RTCOM3_HEADER;
+	frameData->header.dstAddr = RTCOM3_DSTADDR;
+	frameData->header.srcAddr = RTCOM3_SRCADDR;
 	frameData->header.frameCode = 0x11;
 	frameData->header.funCode = 0x83;
-	frameData->header.len = 8;
+	frameData->header.len = sizeof(RTCom3Data1Value) + 2;
 
-	frameData->data.p1Set = vHz;
+	frameData->data.p1Set = MainData_txGetHz();
 	frameData->data.p2run = 0;
-	frameData->data.p3Code = 0;
-	frameData->data.p4Upspeed = 0x0a;
-	frameData->data.p5DownSpeed = 0x0a;
+	frameData->data.p3Code = MainData_txGetCode();
+	frameData->data.p4Upspeed = MainData_txGetUpspeed();
+	frameData->data.p5DownSpeed = MainData_txGetDownspeed();
 	frameData->data.p6Null = 0x00;
 
 	//check err
-	frameData->crr = RTCom3_checkXrr(frameData, frameHeader->len - 1);
+	frameData->crr = RTCom3_checkXrr(frameData, xrrLen - 1);
 
-	//push to queue
-	RTCom3_pushEvent(frameHeader, xrrLen);
-}
-
-static bool sendNext(P_RTRCFlag rcFlag)
-{
-	if (rcFlag->sendCount >= rcFlag->sendCountMax)
-	{
-		//recv err
-		//reset rcvflag done
-		rcFlag->recFlag = DONE;
-		return true;
-	}
-	if (rcFlag->recFlag == DONE)
-	{
-		return true;
-	}else
-	{
-		//not receive
-		rcFlag->sendCount++;
-		return false;
-	}
-	//if (RTCom3_lengthEvent() == 0)
-	//{
-	//	return false;
-	//}
+	//enable dma tx
+	vuart3DmaTxDataEnable(xrrLen, (uint8_t*)frameData);
 }
 
 void RTCom3_SendProcess(P_RTRCFlag rcFlag)
 {
 	assert(rcFlag);
 
-	if (!sendNext(rcFlag))
+	//receive
+	if (rcFlag->recFlag)
 	{
-		//resend
-		//set dma addr at S_tDmaSend1
-		return;
+		rcFlag->sendCount=0;
+	}else{
+		rcFlag->sendCount++;
+		if (rcFlag->sendCount >= rcFlag->sendCountMax)
+		{
+			//set error, not receive from rs485
+			//@@@@@@@@@@@
+		}
 	}
 
-	if (RTCom3_lengthEvent() == 0)
-	{
-		return ;
-	}
-	
-	//pop next queue
-	//set dma addr count, 1.cast to RTHeader_T,obtain len, uartx,
-	//2.get data Frame addr,set dma addr, len
-	//3.set rcFlag->recFlag = UNDONE;
-	//reset sendCount
-	RTCom3_popEvent(S_tDmaSend1);
-	rcFlag->sendCount = 0;
+	rcFlag->recFlag = UNDONE;
+	RTCom3_SendCM1();
 }
 
-void RTCom3_setRecFlag(P_Event event)
+void RTCom3_setRecFlag(void)
 {
-	if (event->eventId == RTCOM3)
-	{
-		S_rcFlag.recFlag = DONE;
-	}
+	S_rcFlag.recFlag = DONE;
 }
+
+uint8_t RTCom3_getCount(void)
+{
+	return S_rcFlag.sendCount;
+}
+
+void UART3_RTProcess(void)
+{
+	RTCom3_recProcess();
+	RTCom3_SendProcess(&S_rcFlag);
+}
+
 
 //**********************************
-//only send
 
 static uint8_t* puartGetRTxAddress(void)
 {
 	return RxBuff;
 }
 
-void UART3_Init(void)
+static void UART3_hwInit(void)
 {
 	GPIO_InitTypeDef	GPIO_InitStructure;
 	DMA_InitTypeDef		DMA_InitStructure;
@@ -337,10 +363,9 @@ void Usart3_IdlHandle_ISR(void)
 		//
 		if (DataLen >0)
 		{
-			//RT_uartRxPush((uint8_t)DataLen, &uart2RxProcess);
 			while(DataLen > 0)
 			{
-				if (RxBuff[i] == 0xca && RxBuff[i+1] == 0xac)
+				if (RxBuff[i] == RTCOM3_HEADER && RxBuff[i+1] == RTCOM3_HEADER)
 				{
 					break;
 				}
@@ -349,9 +374,8 @@ void Usart3_IdlHandle_ISR(void)
 			}
 			if (DataLen>0)
 			{
-				memcpy(S_tDmaSend1, &RxBuff[i], DataLen);	
-				vuart3DmaTxDataEnable(DataLen, &RxBuff[i]);
-				//RTCom2Rec_pushEvent(&RxBuff[i], DataLen);
+				RTCom3_setRecFlag();
+				RTCom3_pushEvent(&RxBuff[i], DataLen);
 			}
 		}
 
@@ -372,4 +396,8 @@ void Usart3_IdlHandle_ISR(void)
 	USART_ClearITPendingBit(USART3, USART_IT_IDLE);
 }
 
-
+void UART3_Init(void)
+{
+	RTCom3_createEvent();
+	UART3_hwInit();
+}

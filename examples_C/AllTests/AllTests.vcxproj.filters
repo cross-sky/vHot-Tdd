@@ -44,7 +44,9 @@
     <ClCompile Include="src\bsp\RTCom2_Test.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\bsp\spy.c" />
+    <ClCompile Include="src\bsp\spy.c">
+      <Filter>spy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />
@@ -54,11 +56,16 @@
     <ClInclude Include="src\bsp\ComInputDISpy.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\bsp\spy.h" />
+    <ClInclude Include="src\bsp\spy.h">
+      <Filter>spy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{72524732-f64b-4437-ba2e-868d333d95f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spy">
+      <UniqueIdentifier>{f60d77eb-de14-43e2-9989-645333cc0b75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

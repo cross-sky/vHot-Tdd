@@ -20,6 +20,7 @@ SET CPU_CLOCK=0x007A1200
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\valve.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\rtcom1.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\rtcom3send.__i"
+"E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\maindata.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\main.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmLink" --Via "..\Output\STM32-DEMO.lnp"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\fromelf.exe" "..\Output\STM32-DEMO.axf" --i32combined --output "..\Output\STM32-DEMO.hex"

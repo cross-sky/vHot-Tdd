@@ -98,9 +98,8 @@ bool RTCom3Rec_checkFrame(P_RTCom3DMA dmaAddr)
 
 	//check send flag, then set recflag
 
-
 	RTCom3Rec_pushEvent(eventHeader, eventHeader->len);
-	RTCom3_setRecFlag(&eventHeader->event);
+	RTCom3_setRecFlag();
 	return true;
 }
 

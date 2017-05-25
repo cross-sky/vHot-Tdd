@@ -510,6 +510,11 @@
               <FileType>1</FileType>
               <FilePath>..\examples_C\ApplicationLib\src\bsp\RTCom3send.c</FilePath>
             </File>
+            <File>
+              <FileName>MainData.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\MainData.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -50,9 +50,9 @@ typedef struct _RTCom3_Data1Header{
 	uint8_t header2;
 	uint8_t dstAddr;
 	uint8_t srcAddr;
-	uint8_t frameCode;
-	uint8_t funCode;
+	uint8_t frameCode;	
 	uint8_t len;
+	uint8_t funCode;
 }RTCom3_Data1Header;
 
 typedef struct _RTCom3Send1{
@@ -61,7 +61,7 @@ typedef struct _RTCom3Send1{
 	uint8_t crr;
 }RTCom3SFrame1_T, *P_RTCom3SFrame1;
 
-typedef struct _RTCom3Recv1{
+typedef struct {
 	uint8_t p0Sethz;	//设定频率
 	uint8_t p1RunHz;	//运行频率
 	uint8_t p2State;	//设备运行状态
@@ -98,18 +98,23 @@ bool RTCom3_pushEvent(void* dataAddr, uint16_t dataLen);
 uint16_t RTCom3_lengthEvent(void);
 void RTCom3_destoryEvent(void);
 
-void RTCom3_SendCM1(uint8_t vHz);
+void RTCom3_SendCM1(void);
 
 void RTCom3_SendProcess(P_RTRCFlag rcFlag);
 void RTCom3_initRCflag(P_RTRCFlag rcFlag);
 
 uint8_t RTCom3_checkXrr(void* addr, uint8_t len);
-void RTCom3_setRecFlag(P_Event event);
+void RTCom3_setRecFlag(void);
 
 void UART3_Init(void);
 void Uart3_DmaTxHandler_ISR(void);
 void Uart3_DmaRxHandle_ISR(void);
 void Usart3_IdlHandle_ISR(void);
+void vuart3DmaTxDataEnable(uint16_t len, uint8_t *address);
+
+bool RTCom3_recProcess(void);
+uint8_t RTCom3_getCount(void);
+void UART3_RTProcess(void);
 
 #endif
 
