@@ -24,11 +24,6 @@ static bool checkCountConvertComplete(P_ComInput comInput)
 	return comInput->count >= comInput->maxCount;
 }
 
-//static bool checkRunStageComplete(P_ComInput comInput)
-//{
-//	return comInput->runTime >= comInput->maxRunTime;
-//}
-
 static bool checkHardConvertComplete(P_ComInput comInput)
 {
 	uint8_t result = comInput->hardFlagFun();

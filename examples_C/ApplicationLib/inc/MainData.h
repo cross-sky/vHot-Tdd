@@ -13,6 +13,7 @@ void MainData_txSetDownspeed(uint8_t downspeed);
 uint8_t MainData_txGetDownspeed(void);
 
 void MainData_rxConvert(P_RTCom3RFrame1 rec1);
+uint8_t MainData_rxDrGetStatus(void);
 
 void MainData_initPara(void);
 

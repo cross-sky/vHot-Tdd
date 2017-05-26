@@ -39,17 +39,6 @@ void LED1on(void);
 // 					else		\
 // 					GPIO_ResetBits(GPIOC,GPIO_Pin_1)
 // 
-// 
-// #define LED2(a)	if (a)	\
-// 					GPIO_SetBits(GPIOC,GPIO_Pin_3);\
-// 					else		\
-// 					GPIO_ResetBits(GPIOC,GPIO_Pin_3)
-// 
-// #define LED3(a)	if (a)	\
-// 					GPIO_SetBits(GPIOC,GPIO_Pin_13);\
-// 					else		\
-// 					GPIO_ResetBits(GPIOC,GPIO_Pin_13)
-// 
 // extern void LedGpioConfig(void);
 // extern void LEDdisplay(u8 LightChannel);
 //  void LED1on(void);

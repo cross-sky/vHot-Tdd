@@ -515,6 +515,21 @@
               <FileType>1</FileType>
               <FilePath>..\examples_C\ApplicationLib\src\bsp\MainData.c</FilePath>
             </File>
+            <File>
+              <FileName>StateRunFunction.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\StateRunFunction.c</FilePath>
+            </File>
+            <File>
+              <FileName>Funstate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\util\Funstate.c</FilePath>
+            </File>
+            <File>
+              <FileName>ComInputDI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\examples_C\ApplicationLib\src\bsp\ComInputDI.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

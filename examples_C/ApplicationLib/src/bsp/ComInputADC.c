@@ -26,11 +26,6 @@ static uint8_t S_hardFlag = DONE;
 
 static ComInput_T S_comInputAdc;
 
-void ComInputADC_setData(void)
-{
-	
-}
-
 static void convertADCData(void)
 {
 	uint8_t i;
@@ -45,7 +40,6 @@ static void convertADCData(void)
 
 void ComInputADC_hardFun(void)
 {
-	ComInputADC_setData();
 	//isr set hard flag = done
 	ComInputADC_startSimpling();
 }
@@ -79,6 +73,7 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 	len += snprintf(dst + len, maxSize - len,"VA-%d,", Valve_getTotalSteps(VALVE_TYPE_MAINA));
 	len += snprintf(dst + len, maxSize - len,"VB-%d,", Valve_getTotalSteps(VALVE_TYPE_SUBB));
 	//
+	len += snprintf(dst + len, maxSize - len,"DI-%d,", ComInputDI_getAveData());
 	len += snprintf(dst + len, maxSize - len,"DR-%d,", RTCom3_getCount());
 	len  += snprintf(dst + len, maxSize - len, "\r\n");
 	return len;

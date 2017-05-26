@@ -171,8 +171,6 @@ void Valve_ProcessEvent(VALVEKINDLE_ENUM valveKind)
 {
 	EventValve_T event;
 	//@@@@@发送后，设置为未使用，事件就无法处理
-	//if (!isValveUsed(valveKind))
-	//	return;
 
 	if (Valve_getEvent(&event))
 	{
@@ -207,16 +205,21 @@ void Valve_taskProcess(void)
 
 void Valve_hwInit(void)
 {
-	EventValve_T initEvent;
+	//EventValve_T initEvent;
 	Valve_createEvent();
 	//send init event
 
+	Valve_setToStep(VALVE_TYPE_MAINA, 30, VALVE_INIT);
+	Valve_setToStep(VALVE_TYPE_SUBB, 30, VALVE_INIT);
+}
+
+void Valve_setToStep(VALVEKINDLE_ENUM valveKindle, int16_t steps, VALVESTATE_ENUM state)
+{
+	EventValve_T initEvent;
 	initEvent.event.eventType = VALVE_TYPE;
-	initEvent.event.eventId = VALVE_TYPE_SUBB;
-	initEvent.code = 30;
-	initEvent.state = VALVE_INIT;
-	Valve_pushEvent(&initEvent);
-	initEvent.event.eventId = VALVE_TYPE_MAINA;
+	initEvent.event.eventId = valveKindle;
+	initEvent.code = steps;
+	initEvent.state = state;
 	Valve_pushEvent(&initEvent);
 }
 

@@ -31,5 +31,9 @@ P_ComInput ComInputDI_getBaseAddr(void);
 void ComInputDI_setDIData(void);
 
 void ComInputDI_setHardFlagFun(void);
+void ComInputDI_Init(void);
+uint16_t ComInputDI_getAveData(void);
+
+void ComInputADC_DIProcess(void);
 
 #endif

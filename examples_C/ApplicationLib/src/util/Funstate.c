@@ -8,6 +8,7 @@ static Event_T S_event[QUEUELENGTH];
 static P_RunFun S_funTable;
 //转换状态函数地址
 static P_Fundata S_pfun;
+static Fundata_T S_fundata;
 //转换时要执行的函数
 static pRunFunctions S_changeFunList[FUN_STATE_MAX];
 
@@ -33,6 +34,13 @@ void Funstate_destoryEvent(void)
 	Queue_destory(&S_sendQue);
 }
 
+static void setChangeFunList(void)
+{
+	S_changeFunList[FUN_STATE_EXIT] = S_funTable[S_pfun->preFun].exit;
+	S_changeFunList[FUN_STATE_INIT] = S_funTable[S_pfun->curFun].init;
+	S_changeFunList[FUN_STATE_RUN] = S_funTable[S_pfun->curFun].run;
+}
+
 void Fundata_create(P_Fundata fundata)
 {
 	fundata->isChange = DONE;
@@ -42,6 +50,7 @@ void Fundata_create(P_Fundata fundata)
 	S_pfun = fundata;
 
 	S_funTable = StateFun_create();
+	setChangeFunList();
 }
 void Fundata_destory(P_Fundata fundata)
 {
@@ -61,14 +70,14 @@ static void setChangeFlag(DONE_ENUM isDone)
 static void setFunChangeState(STATEFUN_ENUM newFunState)
 {
 	S_pfun->curFunState = newFunState;
+	//when fun state change to run, then set change done
+	if (newFunState == FUN_STATE_RUN && checkIsFunChangeDone() == UNDONE)
+	{
+		setChangeFlag(DONE);
+	}
 }
 
-static void setChangeFunList(void)
-{
-	S_changeFunList[FUN_STATE_EXIT] = S_funTable[S_pfun->preFun].exit;
-	S_changeFunList[FUN_STATE_INIT] = S_funTable[S_pfun->curFun].init;
-	S_changeFunList[FUN_STATE_RUN] = S_funTable[S_pfun->curFun].run;
-}
+
 
 static pRunFunctions getRunfun(void)
 {
@@ -88,7 +97,7 @@ static void setPrepareValueToChange(Event_T *_event)
 	{
 		//set necessary value
 		S_pfun->preFun = S_pfun->curFun;
-		S_pfun->curFun = (FUN_ENUM)_event->eventId;
+		S_pfun->curFun = (FUN_SIG_ENUM)_event->eventId;
 		//4.1 set change flag
 		setChangeFlag(UNDONE);
 		//4.2 set change fun state
@@ -115,7 +124,7 @@ static void checkNewEvent(void)
 	}
 }
 
-bool Funstate_processEvent(void)
+void Funstate_processEvent(void)
 {
 	pRunFunctions runFun;
 	STATEFUN_ENUM runResult;
@@ -128,10 +137,10 @@ bool Funstate_processEvent(void)
 	setFunChangeState(runResult);
 	//4.1 save preRunfun	
 	savePreRunFun(runFun);
-	return true;
+	//return true;
 }
 
-FUN_ENUM Fundata_getCurFunSig(void)
+FUN_SIG_ENUM Fundata_getCurFunSig(void)
 {
 	return S_pfun->curFun;
 }
@@ -141,3 +150,20 @@ STATEFUN_ENUM Fundata_getFunChangeState(void)
 	return S_pfun->curFunState;
 }
 
+void Fundata_init(void)
+{
+	Funstate_createEvent();
+	Fundata_create(&S_fundata);
+}
+
+void Funstate_sendSig(FUN_SIG_ENUM sig)
+{
+	Event_T fevent;
+	if (sig > SIG_FUN_MAX)
+	{
+		return;
+	}
+	fevent.eventType = FUN_TYPE;
+	fevent.eventId = sig;
+	Funstate_pushEvent(&fevent);
+}

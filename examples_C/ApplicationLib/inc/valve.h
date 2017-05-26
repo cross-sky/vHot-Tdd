@@ -50,6 +50,7 @@ void Valve_hwInit(void);
 
 void RV_clearValveValue(VALVEKINDLE_ENUM valveKind);
 int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle);
+void Valve_setToStep(VALVEKINDLE_ENUM valveKindle, int16_t steps, VALVESTATE_ENUM state);
 
 #endif
 

@@ -14,13 +14,13 @@ static ComInput_T comInput;
 
 static void hardFun(void)
 {
-	printf("hard done\r\n");
+	printf("test hard done\r\n");
 	hardFlag = DONE;
 }
 
 static void aveFun(void)
 {
-	printf("avefun\r\n");
+	printf("test avefun\r\n");
 }
 
 static uint8_t hardFlagFun(void)
@@ -30,7 +30,7 @@ static uint8_t hardFlagFun(void)
 static void clearHardFlagFun(void)
 {
 	static uint8_t i = 0;
-	printf("clear hard flag count:%d.\r\n", i++);
+	printf("test clear hard flag count:%d.\r\n", i++);
 	hardFlag = UNDONE;
 }
 

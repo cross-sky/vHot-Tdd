@@ -81,8 +81,12 @@
     <ClCompile Include="src\bsp\RTCom2.c">
       <Filter>src\bsp</Filter>
     </ClCompile>
-    <ClCompile Include="src\bsp\RTCom1.c" />
-    <ClCompile Include="src\bsp\MainData.c" />
+    <ClCompile Include="src\bsp\MainData.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bsp\RTCom1.c">
+      <Filter>src\bsp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\comm.h">

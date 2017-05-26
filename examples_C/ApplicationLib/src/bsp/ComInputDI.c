@@ -1,9 +1,18 @@
 #include "comm.h"
 
+#define DIO_MAX 1
+#define DIPins GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8
+#define DIGPIO	GPIOB
+#define DIIO_SHIFT 6
+
 static uint16_t S_tempData[MAX_ADI_CONVERT_COUNT];
 static uint16_t S_aveData;
 static uint8_t S_hardFlag = DONE;
 static ComInput_T S_comInputDI;
+
+const IOControl Di_IoPin[DIO_MAX]={
+	{DIPins, GPIOB ,RCC_APB2Periph_GPIOB},
+};
 
 void ComInputDI_create(void)
 {
@@ -36,6 +45,7 @@ void ComInputDI_hardFun(void)
 void ComInputDI_aveFun(void)
 {
 	uint8_t i, j, count;
+	uint16_t tdata = 0;
 	for (j = 0; j < DI_MAX_ENUM; j++)
 	{
 		count = 0;
@@ -44,9 +54,9 @@ void ComInputDI_aveFun(void)
 			count += (S_tempData[i] >> j) & 0x01;
 		}
 		//有4次闭合，确认正常
-		S_aveData |= (count >> 2) << j;
+		tdata |= (count >> 2) << j;
 	}
-	
+	S_aveData = tdata;
 }
 uint8_t ComInputDI_getHardFlagFun(void)
 {
@@ -81,5 +91,40 @@ uint16_t ComInputDI_getDIValue(uint8_t diNumber)
 
 void ComInputDI_setDIData(void)
 {
-
+	uint16_t *addr;
+	S_hardFlag = DONE;
+	addr = ComInputDI_getTempDataAddr();
+	*addr = (DIGPIO->IDR >> DIIO_SHIFT) & 0x07;
 }
+
+
+void ComInputDI_Init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	uint8_t name;
+
+	//手动开CLK吧，也就几个
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+
+	for (name=0; name<DIO_MAX; name++)
+	{
+		GPIO_InitStructure.GPIO_Pin = Di_IoPin[name].pin;
+		//这里设置为推挽输出，GPIO_Mode_IN_FLOATING
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+		GPIO_Init(Di_IoPin[name].port, &GPIO_InitStructure);
+	}
+
+	ComInputDI_create();
+}
+
+uint16_t ComInputDI_getAveData(void)
+{
+	return S_aveData;
+}
+
+void ComInputADC_DIProcess(void)
+{
+	ComInputADC_process();
+	ComInputDI_process();
+}
+

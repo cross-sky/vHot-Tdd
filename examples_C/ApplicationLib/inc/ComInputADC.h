@@ -33,8 +33,6 @@ uint16_t* ComInputADC_getTempDataAddr(void);
 
 P_ComInput ComInputADC_getBaseAddr(void);
 
-void ComInputADC_setData(void);
-
 uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize);
 void ComInputADC_setHardFlagFun(void);
 void ComInputADC_Init(void);

@@ -37,6 +37,7 @@ typedef enum
 	TASK_ADC,
 	TASK_RV,
 	TASK_UART3,
+	TASK_FUNSTATE,
 	TASKS_MAX
 } TASK_LIST;
 

@@ -29,7 +29,7 @@ typedef struct _MData{
 	
 	RalayVData_T* rvData;
 	DriverData_T* driverData;
-};
+}MData_T;
 
 static void initDriverData(void)
 {
@@ -43,6 +43,10 @@ static void initDriverData(void)
 
 void MainData_txSetHz(uint8_t hz)
 {
+	if (hz > 90)
+	{
+		return;
+	}
 	S_driverData.txValue.p1Set = hz;
 	//@@@@@要不要设置P2
 }
@@ -53,7 +57,7 @@ uint8_t MainData_txGetHz(void)
 
 void MainData_txSetCode(uint8_t code)
 {
-	S_driverData.txValue.p3Code = code;
+	S_driverData.txValue.p3Code = code & 0x01;
 }
 uint8_t MainData_txGetCode(void)
 {
@@ -97,6 +101,11 @@ void MainData_rxConvert(P_RTCom3RFrame1 rec1)
 	dst->acU = rec1->data.p17U220 << 1;
 	dst->acI = rec1->data.p18I220H * 10 + rec1->data.p19I220L / 10;
 	dst->power = rec1->data.p20KWH * 10 + rec1->data.p21KWL / 10;
+}
+
+uint8_t MainData_rxDrGetStatus(void)
+{
+	return S_driverData.rxValue.status;
 }
 
 void MainData_initPara(void)

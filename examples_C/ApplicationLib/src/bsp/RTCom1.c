@@ -12,6 +12,17 @@ static uint8_t s_dmaRxBuf[RXBUF_SIZE];
 #define UART1_FRAME1 0xfe
 #define UART1_FRAME2 0xef
 
+static void recCode1(uint8_t code)
+{
+	static uint8_t i=0;
+	code &= 0x01;
+	if (i != code)
+	{
+		Funstate_sendSig((FUN_SIG_ENUM)code);
+		i = code;
+	}
+}
+
 void Uart1_DmaTxDataEnable(uint16_t len, uint8_t *address)
 {
 	DMA1_Ch_Usart1_Tx->CNDTR =len;	//
@@ -141,6 +152,7 @@ void Usart1_IdlHandle_ISR(void)
 				if (buff[i + 3] == 0xb1)
 				{
 					Task_changeLedTime(buff[i + 4] & 0x01);
+					recCode1(buff[i + 4] & 0x01);
 					//memcpy(s_dmaTxBuf, &buff[i], 3);
 					Uart1_DmaTxDataEnable(3, s_queDbuf);
 				}
@@ -182,3 +194,4 @@ void RTCom1_init(void)
 {
 	hwUart1Init();
 }
+

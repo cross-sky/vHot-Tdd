@@ -20,8 +20,8 @@ static uint8_t S_trec[RTLEN];
 #define RTCOM3_SRCADDR 0x00
 
 //Pa8 re pin
-#define RS485EN_H(pin) GPIOA->BSRR=pin
-#define IO_L(pin) GPIOA->BRR=pin
+#define IOA_H(pin) GPIOA->BSRR=pin
+#define IOA_L(pin) GPIOA->BRR=pin
 
 static uint8_t RxBuff[Rx3BUF_MAX]={0};
 
@@ -36,10 +36,10 @@ void RTCom3_initRCflag(P_RTRCFlag rcFlag)
 	rcFlag->sendCountMax = 60;
 }
 
-static uint8_t* getSend1FrameHeaderAddr(void)
-{
-	return S_tsend1;
-}
+//static uint8_t* getSend1FrameHeaderAddr(void)
+//{
+//	return S_tsend1;
+//}
 
 static uint8_t* getSend1FrameDataAddr(void)
 {
@@ -306,7 +306,7 @@ static void UART3_hwInit(void)
 	USART_Cmd(RS485_UART3, ENABLE);
 	
 	//set to rx mode,set to low
-	IO_L(RS485_RePin);
+	IOA_L(RS485_RePin);
 }
 
 void Uart3_DmaTxHandler_ISR(void)
@@ -332,7 +332,7 @@ void Uart3_DmaRxHandle_ISR(void)
 void vuart3DmaTxDataEnable(uint16_t len, uint8_t *address)
 {
 	//before enable tx,set rePin to high
-	RS485EN_H(RS485_RePin);
+	IOA_H(RS485_RePin);
 
 	DMA_Cmd(DMA1_Ch_Usart3_Tx,DISABLE);
 	DMA1_Ch_Usart3_Tx->CNDTR =len;	//
@@ -351,7 +351,7 @@ void Usart3_IdlHandle_ISR(void)
 
 	if (USART_GetITStatus(USART3, USART_IT_TC) != RESET)
 	{
-		IO_L(RS485_RePin);
+		IOA_L(RS485_RePin);
 		USART_ClearITPendingBit(USART3, USART_IT_TC);
 		return;
 	}

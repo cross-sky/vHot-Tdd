@@ -12,7 +12,7 @@ static void initComInputAdc(void)
 	_comInputAdc->maxRunTime = 10;
 }
 
-void ComInputADC_setData(void)
+void ComInputADC_startSimpling(void)
 {
 	uint16_t *addr;
 	uint8_t i,count;
@@ -32,8 +32,4 @@ void ComInputADCSpy_crate(void)
 	initComInputAdc();
 }
 
-void ComInputADC_startSimpling(void)
-{
-
-}
 

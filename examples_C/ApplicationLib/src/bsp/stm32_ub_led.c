@@ -5,8 +5,6 @@ uint16_t i=0;
 LED_t LED[]={
 	// Name    ,PORT , PIN       , CLOCK              , Init
 	{LED1 ,GPIOB,GPIO_Pin_5,RCC_APB2Periph_GPIOB,LED_OFF},   // 
-//	{LED3  ,GPIOC,GPIO_Pin_3,RCC_APB2Periph_GPIOC,LED_OFF},   // 
-//	{LED13  ,GPIOC,GPIO_Pin_13,RCC_APB2Periph_GPIOC,LED_OFF},
 };
 
 void UB_LED_Init(void)
@@ -45,6 +43,7 @@ void UB_Led_On(LED_NAME_t led_name)
 
 void UB_Led_Toggle(LED_NAME_t led_name)
 {
+	//LED[led_name].LED_PORT->BRR = LED[led_name].LED_PIN;
 	LED[led_name].LED_PORT->ODR ^= LED[led_name].LED_PIN;
 }
 

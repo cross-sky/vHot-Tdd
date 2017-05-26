@@ -73,3 +73,38 @@ TEST(Funstate, preFunexitToOn)
 	Funstate_processEvent();
 	LONGS_EQUAL(FUN_STATE_RUN, Fundata_getFunChangeState());
 }
+
+
+TEST(Funstate, preFunexitToHeat)
+{
+	uint16_t i;
+	Funstate_processEvent();
+	S_eventType = FUN_TYPE;
+	S_eventId = SIG_FUN_HEAT;
+	initFunevent(&S_srcFunEvent, S_eventType, S_eventId);
+	Funstate_pushEvent(&S_srcFunEvent);
+
+	for (i = 0; i < 301; i++)
+	{
+		Funstate_processEvent();
+	}
+	LONGS_EQUAL(FUN_STATE_NULL, Fundata_getFunChangeState());
+	Funstate_processEvent();
+	Funstate_processEvent();
+	LONGS_EQUAL(FUN_STATE_RUN, Fundata_getFunChangeState());
+
+	S_eventId = SIG_FUN_OFF;
+	initFunevent(&S_srcFunEvent, S_eventType, S_eventId);
+	Funstate_pushEvent(&S_srcFunEvent);
+
+	
+	for (i = 0; i < 180; i++)
+	{
+		Funstate_processEvent();
+	}
+	LONGS_EQUAL(FUN_STATE_NULL, Fundata_getFunChangeState());
+	
+	Funstate_processEvent();
+	LONGS_EQUAL(FUN_STATE_INIT, Fundata_getFunChangeState());
+}
+

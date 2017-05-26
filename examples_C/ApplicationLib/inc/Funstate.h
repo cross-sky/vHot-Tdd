@@ -14,9 +14,10 @@ typedef enum{
 
 typedef enum{
 	SIG_FUN_OFF,
+	SIG_FUN_HEAT,
 	SIG_FUN_ON,
 	SIG_FUN_MAX
-}FUN_ENUM;
+}FUN_SIG_ENUM;
 
 typedef STATEFUN_ENUM (*pRunFunctions)(void);
 
@@ -29,8 +30,8 @@ typedef struct _pRunFunStruct{
 typedef struct _FundataStruct{
 	DONE_ENUM isChange;
 	STATEFUN_ENUM curFunState;
-	FUN_ENUM curFun;
-	FUN_ENUM preFun;
+	FUN_SIG_ENUM curFun;
+	FUN_SIG_ENUM preFun;
 }Fundata_T, *P_Fundata;
 
 void Funstate_createEvent(void);
@@ -41,10 +42,13 @@ void Funstate_destoryEvent(void);
 
 void Fundata_create(P_Fundata fundata);
 void Fundata_destory(P_Fundata fundata);
-bool Funstate_processEvent(void);
+void Funstate_processEvent(void);
 
-FUN_ENUM Fundata_getCurFunSig(void);
+FUN_SIG_ENUM Fundata_getCurFunSig(void);
 STATEFUN_ENUM Fundata_getFunChangeState(void);
+
+void Fundata_init(void);
+void Funstate_sendSig(FUN_SIG_ENUM sig);
 
 #endif
 
