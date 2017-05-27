@@ -4,6 +4,8 @@
 #include "commdata.h"
 #include "rtdata.h"
 
+#define VALVE_STEPS_ONECE	32	//默认每次运行最大步数
+
 typedef enum{
 	VALVE_INIT,
 	VALVE_RUN,
@@ -13,6 +15,9 @@ typedef enum{
 	VALVE_ADD,	//运行方向 1正方向(增加)
 	VALVE_USED,
 	VALVE_UNUSED,
+	DirectBack,		//反方向(减少)
+	DirectHold,		//不运行
+	DirectForward,	//运行方向 1正方向(增加)
 }VALVESTATE_ENUM;
 
 typedef enum{
@@ -30,10 +35,11 @@ typedef struct EventValve_T{
 typedef struct {
 	DONE_ENUM isDone;
 	int16_t totalSteps;
-//	int16_t curSteps;
 	int16_t runSteps;
-	VALVESTATE_ENUM runDirect;
 	VALVESTATE_ENUM isUsed;
+	int16_t calcLastStep;	//previous一次步数
+	int16_t calcDirection;//运行方向direct**
+	int16_t calcCounts;//连续增加或减少次数
 }ValveStatus_T, *P_ValveStatus;
 
 void Valve_createEvent(void);
@@ -51,6 +57,8 @@ void Valve_hwInit(void);
 void RV_clearValveValue(VALVEKINDLE_ENUM valveKind);
 int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle);
 void Valve_setToStep(VALVEKINDLE_ENUM valveKindle, int16_t steps, VALVESTATE_ENUM state);
+
+void ValveCalc_calcValveMain(VALVEKINDLE_ENUM valveKind);
 
 #endif
 

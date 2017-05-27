@@ -1,41 +1,59 @@
 #include "comm.h"
 #include "adc_filter.h"
+#include <math.h>
 
 #define ADC1_DR_Address    ((uint32_t)0x4001244C)
 #define ADCx_DMA1_IRQn     DMA1_Channel1_IRQn
 
 
-#define  NTCPINCs GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3
+#define  NTCPINCs GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_5
 #define  NTCPINAs GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7
+#define  NTCPINBs GPIO_Pin_0|GPIO_Pin_1 //pt1-l, pt2-h
 //1.头文件设置adc 2.adc数组初始化 3.adc规则组设置 4.转换成实际数据
 
 //channel 序号以硬件ntc00-09所使用的引脚为准
 uint8_t tabChannel[ADCIN_MAX_ENUM]={
 	ADC_Channel_10,ADC_Channel_11,ADC_Channel_12,ADC_Channel_13,
 	ADC_Channel_0, ADC_Channel_1, ADC_Channel_4, ADC_Channel_5,
-	ADC_Channel_6, ADC_Channel_7
+	ADC_Channel_6, ADC_Channel_7,ADC_Channel_15, ADC_Channel_8, 
+	ADC_Channel_9
 };
 
 //-----------------
 static uint16_t S_tempData[MAX_ADI_CONVERT_COUNT][ADCIN_MAX_ENUM];
 
 static uint16_t S_aveData[ADCIN_MAX_ENUM];
-static uint16_t S_relData[ADCIN_MAX_ENUM];
+static int16_t S_relData[ADCIN_MAX_ENUM];
 
 static uint8_t S_hardFlag = DONE;
 
 static ComInput_T S_comInputAdc;
 
+
+
 static void convertADCData(void)
 {
 	uint8_t i;
 	uint16_t searchValue,index;
-	for (i = 0; i < ADCIN_MAX_ENUM; i++)
+	for (i = 0; i < ADCIN11_AOUT; i++)
 	{
 		searchValue = S_aveData[i];
 		index=uADCSearchData10K(searchValue);
 		S_relData[i] = iADCTemperCalc10K(index,searchValue);
 	}
+	{
+		//calc air out
+		searchValue = S_aveData[ADCIN11_AOUT];
+		index=uADCSearchData10KV2(searchValue);
+		S_relData[ADCIN11_AOUT] = iADCTemperCalc10KV2(index,searchValue);
+	}
+
+	//calc L pressure
+	S_relData[ADCPT1_L]= (uint16_t)fabs((10 * S_aveData[ADCPT1_L] / 4096 -1) * 2.5); //P scale 10
+
+	//calc H preesure
+	S_relData[ADCPT2_H]= (uint16_t)fabs((100 * S_aveData[ADCPT2_H] / 4096 -10) / 1.7391); //P scale 10
+
 }
 
 void ComInputADC_hardFun(void)
@@ -177,7 +195,7 @@ static void adcHWInit(void)
 	NVIC_Init(&NVIC_InitStructure);
 
 	//手动开CLK吧，也就2个,注意开ADC的时钟树
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOA|RCC_APB2Periph_ADC1
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_ADC1
 		, ENABLE);
 	RCC_ADCCLKConfig(RCC_PCLK2_Div4);//<14MHz
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,ENABLE);
@@ -187,6 +205,9 @@ static void adcHWInit(void)
 	GPIO_InitStructure.GPIO_Pin = NTCPINAs;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = NTCPINBs;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	GPIO_InitStructure.GPIO_Pin = NTCPINCs;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -257,3 +278,32 @@ void ComInputADC_Init(void)
 	ComInputADC_create();
 	adcHWInit();
 }
+
+int16_t ADC_getAOut(void)
+{
+	return S_relData[ADCIN11_AOUT];
+}
+
+int16_t ADC_getAIN(void)
+{
+	return S_relData[ADCIN0_AIN];
+}
+
+int16_t ADC_getMEva(void)
+{
+	return S_relData[ADCIN1_MEVA];
+}
+
+int16_t ADC_getSuperHeat(void)
+{
+	return 50;
+}
+
+void ADC_setRealData(ADC_ENUM adcIn, int16_t data)
+{
+	if (adcIn < ADCIN_MAX_ENUM)
+	{
+		S_relData[adcIn] = data;
+	}
+}
+

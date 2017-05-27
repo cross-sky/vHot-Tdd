@@ -3,9 +3,11 @@
 
 #include "ComInput.h"
 
+#define AirOutTemperMax100 1000		//110¶È
+
 typedef enum{
-	ADCIN0,
-	ADCIN1,
+	ADCIN0_AIN,		//comp in T
+	ADCIN1_MEVA,	//middle evaporate
 	ADCIN2,
 	ADCIN3,
 	ADCIN4,
@@ -14,7 +16,9 @@ typedef enum{
 	ADCIN7,
 	ADCIN8,
 	ADCIN9,
-//	ADCIN10,
+	ADCIN11_AOUT, //pc5
+	ADCPT1_L,	//pb0
+	ADCPT2_H,	//pb1
 	ADCIN_MAX_ENUM
 }ADC_ENUM;
 
@@ -37,5 +41,12 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize);
 void ComInputADC_setHardFlagFun(void);
 void ComInputADC_Init(void);
 void ComInputADC_ADCDmaChannel1_ISR(void);
+
+int16_t ADC_getAOut(void);
+int16_t ADC_getAIN(void);
+int16_t ADC_getMEva(void);
+int16_t ADC_getSuperHeat(void);
+
+void ADC_setRealData(ADC_ENUM adcIn, int16_t data);
 #endif
 

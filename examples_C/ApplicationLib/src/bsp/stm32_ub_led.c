@@ -43,7 +43,6 @@ void UB_Led_On(LED_NAME_t led_name)
 
 void UB_Led_Toggle(LED_NAME_t led_name)
 {
-	//LED[led_name].LED_PORT->BRR = LED[led_name].LED_PIN;
 	LED[led_name].LED_PORT->ODR ^= LED[led_name].LED_PIN;
 }
 

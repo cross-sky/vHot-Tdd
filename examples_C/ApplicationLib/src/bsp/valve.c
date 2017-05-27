@@ -6,9 +6,11 @@ static Queue_T S_sendQue;
 static EventValve_T S_event[QUEUELENGTH];
 
 static ValveStatus_T S_valveTab[VALVE_TYPE_MAX]={
-	{DONE, 500, 0,  VALVE_HOLD, VALVE_USED},
-	{DONE, 500, 0,  VALVE_HOLD, VALVE_USED},
+	{DONE, 500, 0, VALVE_USED, VALVE_STEPS_ONECE, DirectHold, 0},
+	{DONE, 500, 0, VALVE_USED, VALVE_STEPS_ONECE, DirectHold, 0},
 };
+
+ValveStatus_T* prtvalveStatus= S_valveTab;
 
 typedef enum {
 	IndexInitStep,
@@ -31,6 +33,17 @@ static int16_t S_stepsTab[VALVE_TYPE_MAX][ValveEnumMax]={
 static bool isValveUsed(VALVEKINDLE_ENUM valveKind)
 {
 	return S_valveTab[valveKind].isUsed == VALVE_USED;
+}
+
+static void initValveTab(VALVEKINDLE_ENUM valveKind)
+{
+	prtvalveStatus[valveKind].isDone = DONE;
+	prtvalveStatus[valveKind].totalSteps = 500;
+	prtvalveStatus[valveKind].runSteps = 0;
+	prtvalveStatus[valveKind].isUsed = VALVE_USED;
+	prtvalveStatus[valveKind].calcLastStep = VALVE_STEPS_ONECE;
+	prtvalveStatus[valveKind].calcDirection = DirectHold;
+	prtvalveStatus[valveKind].calcCounts = 0;
 }
 
 
@@ -62,6 +75,8 @@ uint16_t Valve_lenEvent(void)
 void Valve_destoryEvent(void)
 {
 	Queue_destory(&S_sendQue);
+	initValveTab(VALVE_TYPE_MAINA);
+	initValveTab(VALVE_TYPE_SUBB);
 }
 
 static bool isValveDone(VALVEKINDLE_ENUM valveKind)
@@ -231,3 +246,130 @@ int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle)
 	}
 	return 0;
 }
+
+static void valveDirectHold(int16_t subT, int16_t superHeat,VALVEKINDLE_ENUM valveKind )
+{
+	//目标过热度范围T+0.5 
+	if (subT > superHeat+5)
+	{
+		//1.步数保持上次，开度加大，次数+1 TabValveDirect[IndexDirectHold],IndexDirectBack,IndexDirectHold,IndexDirectForward,
+		//DirectBack,DirectHold,DirectForward
+		prtvalveStatus[valveKind].calcDirection = DirectForward;
+		prtvalveStatus[valveKind].calcCounts +=1;
+	}
+	else if (subT < superHeat - 5)
+	{
+		//2.步数保持上次，开度减少，次数+1
+		prtvalveStatus[valveKind].calcDirection = DirectBack;
+		prtvalveStatus[valveKind].calcCounts +=1;
+	}
+	else{
+		//步数，开度保持，次数清0
+		prtvalveStatus[valveKind].calcDirection = DirectHold;
+		prtvalveStatus[valveKind].calcCounts = 0;
+	}
+}
+
+static void valveDirectForward(int16_t subT, int16_t superHeat,VALVEKINDLE_ENUM valveKind)
+{
+	//目标过热度范围T+0.5 
+	if (subT > superHeat + 5)
+	{
+		//1.步数保持上次，开度加大，次数+1
+		prtvalveStatus[valveKind].calcDirection = DirectForward;
+		prtvalveStatus[valveKind].calcCounts +=1;
+	}
+	else if (subT < superHeat - 5)
+	{
+		//2.步数减半，开度减少，次数保持
+		prtvalveStatus[valveKind].calcLastStep >>=1;
+		prtvalveStatus[valveKind].calcDirection = DirectBack;
+	}
+	else{
+		//步数，开度保持，次数清0
+		prtvalveStatus[valveKind].calcDirection = DirectHold;
+		prtvalveStatus[valveKind].calcCounts = 0;
+	}
+}
+
+static void valveDirectBack(int16_t subT, int16_t superHeat,VALVEKINDLE_ENUM valveKind)
+{
+	//目标过热度范围T+0.5 
+	if (subT > superHeat + 5)
+	{
+		//1.步数减半，开度加大，次数保持
+		prtvalveStatus[valveKind].calcLastStep >>=1;
+		prtvalveStatus[valveKind].calcDirection = DirectForward;
+	}
+	else if (subT < superHeat - 5)
+	{
+		//2.步数保持上次，开度减少，次数+1
+		prtvalveStatus[valveKind].calcDirection = DirectBack;
+		prtvalveStatus[valveKind].calcCounts +=1;
+	}
+	else{
+		//步数，开度保持上次，次数清0
+		prtvalveStatus[valveKind].calcDirection = DirectHold;
+		prtvalveStatus[valveKind].calcCounts = 0;
+	}
+}
+
+//计算主电子膨胀阀
+void ValveCalc_calcValveMain(VALVEKINDLE_ENUM valveKind)
+{
+	int16_t superHeat,subT;
+	int16_t code;
+
+	//0.1 排气温度>100,
+	if (ADC_getAOut() > AirOutTemperMax100)
+	{
+		code = (ADC_getAOut()- AirOutTemperMax100+10)/10;
+		//
+		Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+		return;
+	}
+
+	//1. 计算吸气-蒸发
+	subT = ADC_getAIN() - ADC_getMEva();
+	//2.获取目标过热度
+	superHeat = ADC_getSuperHeat();
+
+	//3.1上次电子膨胀阀维持开度
+	if (prtvalveStatus[valveKind].calcDirection == DirectHold)
+	{
+		valveDirectHold(subT,superHeat,valveKind);
+	}
+	//3.2上次电子膨胀阀开度增加
+	else if (prtvalveStatus[valveKind].calcDirection == DirectForward)
+	{
+		valveDirectForward(subT,superHeat,valveKind);
+	}
+	//3.3上次电子膨胀阀开度减少
+	else
+	{
+		valveDirectBack(subT,superHeat,valveKind);
+	}
+	//4.连续增加或减少次数>=4，重置步数和次数
+	if (prtvalveStatus[valveKind].calcCounts >=4)
+	{
+		if (prtvalveStatus[valveKind].calcDirection == DirectForward || prtvalveStatus[valveKind].calcDirection == DirectBack)
+		{
+			prtvalveStatus[valveKind].calcLastStep = VALVE_STEPS_ONECE;
+			prtvalveStatus[valveKind].calcCounts = 0;
+		}
+	}
+
+	//步数<1,步数置1
+	if (prtvalveStatus[valveKind].calcLastStep <= 1 )
+	{
+		prtvalveStatus[valveKind].calcLastStep = 1;
+	}
+
+	//5.发送步数LastStep*ValveDirection, valveRun,
+	//步数*方向 区分正反转
+	code = prtvalveStatus[valveKind].calcLastStep*(int16_t)(prtvalveStatus[valveKind].calcDirection - DirectHold);
+	//push to queue
+	Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+}
+
+

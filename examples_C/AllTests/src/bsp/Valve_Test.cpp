@@ -6,6 +6,7 @@
 extern "C"
 {
 #include "valve.h"
+#include "ComInputADC.h"
 }
 
 EventValve_T src, dst;
@@ -49,3 +50,24 @@ TEST(ValveTest, processEvent)
 	Valve_ProcessEvent(VALVE_TYPE_MAINA);
 	LONGS_EQUAL(DONE, Valve_getState(VALVE_TYPE_MAINA));
 }
+
+TEST(ValveTest, CalcValve)
+{
+	ADC_setRealData(ADCIN11_AOUT, 800);
+	ADC_setRealData(ADCIN0_AIN, 100);
+	ADC_setRealData(ADCIN1_MEVA, 40);
+	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
+
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(VALVE_STEPS_ONECE, dst.code); //first forward
+
+	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(VALVE_STEPS_ONECE, dst.code);//again forward
+
+	ADC_setRealData(ADCIN1_MEVA, 60);	//100-40 = 40 < 50
+	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(-VALVE_STEPS_ONECE/2, dst.code);//then back
+}
+
