@@ -41,6 +41,11 @@ void RTCom3_initRCflag(P_RTRCFlag rcFlag)
 //	return S_tsend1;
 //}
 
+uint8_t* RTCom3_getRS485Data(void)
+{
+	return S_trec;
+}
+
 static uint8_t* getSend1FrameDataAddr(void)
 {
 	return S_tsend1 + sizeof(RTHeader_T);
@@ -299,7 +304,6 @@ static void UART3_hwInit(void)
 	USART_ITConfig(RS485_UART3, USART_IT_IDLE , ENABLE);//
 
 	//这里开启发送完成中断，中断函数设置re=0；
-	//USART_ClearFlag(RS485_UART3, USART_IT_TC);     //* 清发送外城标志，USART_FLAG_TC
 	USART_ClearITPendingBit(USART3, USART_IT_TC);
 	USART_ITConfig(RS485_UART3, USART_IT_TC , ENABLE);//
 
@@ -340,8 +344,6 @@ void vuart3DmaTxDataEnable(uint16_t len, uint8_t *address)
 
 	DMA_Cmd(DMA1_Ch_Usart3_Tx,ENABLE);
 
-	//在这里开启发送完成中断，或者不开。。。。
-	//USART_ITConfig(RS485_UART3, USART_IT_TC , ENABLE);//
 }
 
 void Usart3_IdlHandle_ISR(void)

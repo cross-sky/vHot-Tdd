@@ -6,6 +6,7 @@ extern "C"
 {
 #include "ComInputADC.h"
 #include "ComInputADCSpy.h"
+#include "adc_filter.h"
 }
 
 TEST_GROUP(ComInputADC)
@@ -38,4 +39,16 @@ TEST(ComInputADC, convert5Times)
 	{
 		LONGS_EQUAL(4 + i + ADCSPY_TESTVALUE, ComInputADC_getADCValue(i));
 	}
+
+}
+
+TEST(ComInputADC, testADCValue)
+{
+	//1985 means 250
+	uint16_t searchValue = 1985,index;
+	int16_t realValue;
+	index=uADCSearchData5K(searchValue);
+	realValue = iADCTemperCalc5K(index,searchValue);
+	LONGS_EQUAL(250, realValue);
+	printf("realValue is %d\r\n", realValue);
 }

@@ -55,7 +55,7 @@ TEST(ValveTest, CalcValve)
 {
 	ADC_setRealData(ADCIN11_AOUT, 800);
 	ADC_setRealData(ADCIN0_AIN, 100);
-	ADC_setRealData(ADCIN1_MEVA, 40);
+	ADC_setRealData(ADCIN1_MEVA, 30);
 	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
 
 	Valve_popEvent(&dst);

@@ -116,5 +116,7 @@ bool RTCom3_recProcess(void);
 uint8_t RTCom3_getCount(void);
 void UART3_RTProcess(void);
 
+uint8_t* RTCom3_getRS485Data(void);
+
 #endif
 

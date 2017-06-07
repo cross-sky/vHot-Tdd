@@ -47,6 +47,9 @@
     <ClCompile Include="src\bsp\spy.c">
       <Filter>spy</Filter>
     </ClCompile>
+    <ClCompile Include="src\bsp\Pressure_Test.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllTests.h" />

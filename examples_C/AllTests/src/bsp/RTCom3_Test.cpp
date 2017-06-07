@@ -13,6 +13,11 @@ static uint8_t src[30];
 static uint8_t dst[30];
 static RTRCFlag_T rcFlag;
 
+static uint8_t s_recA[30]={
+	0x7e, 0x7e, 0x00, 0xc0, 0x11, 0x18, 0x03, 0x1e, 0x1d, 0x06, 0x11, 0x67, 0x01, 0x73, 0x00, 0x00, 
+	0x01, 0x8d, 0x01, 0x01, 0xe8, 0x11, 0x00, 0x64, 0x6e, 0x0c, 0x56, 0x01, 0x27, 0xc8
+};
+
 #define DMADATA_LEN 40
 static uint8_t S_dmaDataT[DMADATA_LEN];
 
@@ -104,6 +109,11 @@ TEST(RTCom3, pushAndPop)
 	RTCom3_pushEvent(&src, sizeof(RTCom3SFrame1_T));
 	RTCom3_popEvent((uint8_t*)dst);
 	LONGS_EQUAL(dst[5], src[5]);
+
+	memcpy(src, s_recA, 30);
+	RTCom3_pushEvent(&src, sizeof(RTCom3SFrame1_T));
+	RTCom3_popEvent((uint8_t*)dst);
+	LONGS_EQUAL(dst[8], src[8]);
 }
 
 TEST(RTCom3,createSendData)

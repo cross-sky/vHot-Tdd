@@ -1,5 +1,6 @@
 #include "comm.h"
 #include "adc_filter.h"
+#include "pressure.h"
 #include <math.h>
 
 #define ADC1_DR_Address    ((uint32_t)0x4001244C)
@@ -29,7 +30,7 @@ static uint8_t S_hardFlag = DONE;
 
 static ComInput_T S_comInputAdc;
 
-
+static int16_t S_pressure[2];
 
 static void convertADCData(void)
 {
@@ -38,8 +39,8 @@ static void convertADCData(void)
 	for (i = 0; i < ADCIN11_AOUT; i++)
 	{
 		searchValue = S_aveData[i];
-		index=uADCSearchData10K(searchValue);
-		S_relData[i] = iADCTemperCalc10K(index,searchValue);
+		index=uADCSearchData5K(searchValue);
+		S_relData[i] = iADCTemperCalc5K(index,searchValue);
 	}
 	{
 		//calc air out
@@ -48,11 +49,24 @@ static void convertADCData(void)
 		S_relData[ADCIN11_AOUT] = iADCTemperCalc10KV2(index,searchValue);
 	}
 
-	//calc L pressure
-	S_relData[ADCPT1_L]= (uint16_t)fabs((10 * S_aveData[ADCPT1_L] / 4096 -1) * 2.5); //P scale 10
+	{
+		//calc L pressure temper
+		searchValue = S_aveData[ADCPT1_L];
+		index=uPresLSearchData(searchValue);
+		S_relData[ADCPT1_L] = iPresLCalc(index,searchValue);
+	}
+
+	{
+		//calc H preesure
+		searchValue = S_aveData[ADCPT2_H];
+		index=uPresHSearchData(searchValue);
+		S_relData[ADCPT2_H] = iPresHCalc(index,searchValue);
+	}
+
+	S_pressure[0]= (uint16_t)fabs((100 * S_aveData[ADCPT1_L] / 4096 -10) * 10 / 4); //PL scale 100
 
 	//calc H preesure
-	S_relData[ADCPT2_H]= (uint16_t)fabs((100 * S_aveData[ADCPT2_H] / 4096 -10) / 1.7391); //P scale 10
+	S_pressure[1]= (uint16_t)fabs((100 * S_aveData[ADCPT2_H] / 4096 -10) * 10 / 1.7391); //PH scale 100
 
 }
 
@@ -69,7 +83,7 @@ void ComInputADC_aveFun(void)
 	for (i = 0; i < ADCIN_MAX_ENUM ; i++)
 	{
 		values = 0;
-		for (j = 0; j < MAX_ADI_CONVERT_COUNT; j ++)
+		for (j = 0; j < MAX_ADI_CONVERT_COUNT; j++)
 		{
 			values += S_tempData[j][i];
 		}
@@ -88,11 +102,21 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 	{
 		len += snprintf(dst + len, maxSize - len,"%d,", S_relData[i]);
 	}
+
+	//l h pressure
+	len += snprintf(dst + len, maxSize - len,"%d,", S_pressure[0]);
+	len += snprintf(dst + len, maxSize - len,"%d,", S_pressure[1]);
+
 	len += snprintf(dst + len, maxSize - len,"VA-%d,", Valve_getTotalSteps(VALVE_TYPE_MAINA));
 	len += snprintf(dst + len, maxSize - len,"VB-%d,", Valve_getTotalSteps(VALVE_TYPE_SUBB));
 	//
 	len += snprintf(dst + len, maxSize - len,"DI-%d,", ComInputDI_getAveData());
 	len += snprintf(dst + len, maxSize - len,"DR-%d,", RTCom3_getCount());
+
+	//rs485 data
+	//memcpy(dst + len, RTCom3_getRS485Data(), sizeof(RTCom3RFrame1_T));
+	//len += sizeof(RTCom3RFrame1_T);
+
 	len  += snprintf(dst + len, maxSize - len, "\r\n");
 	return len;
 }
@@ -292,6 +316,12 @@ int16_t ADC_getAIN(void)
 int16_t ADC_getMEva(void)
 {
 	return S_relData[ADCIN1_MEVA];
+}
+
+//ÎüÆø±¥ºÍÎÂ¶È
+int16_t ADC_getAINSaturation(void)
+{
+	return S_relData[ADCPT1_L];
 }
 
 int16_t ADC_getSuperHeat(void)

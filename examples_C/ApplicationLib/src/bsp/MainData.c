@@ -9,7 +9,6 @@ typedef struct _driverRec{
 	uint16_t dcI;
 	uint16_t dcU;
 	int8_t fpcTemp;
-//	uint8_t verU;
 	uint8_t versoft;
 	uint8_t verComp;
 	uint16_t acU;
@@ -89,7 +88,7 @@ void MainData_rxConvert(P_RTCom3RFrame1 rec1)
 
 	dst->status = rec1->data.p2State;
 	dst->dcI = rec1->data.p3IH * 10 + rec1->data.p4IL / 10;
-	dst->dcU = rec1->data.p5UH * 10 + rec1->data.p6UL /10;
+	dst->dcU = (rec1->data.p5UH << 8) + rec1->data.p6UL;
 	dst->ipmTemp = rec1->data.p10Temper - 100;
 	dst->err[0] = rec1->data.p7Err1;
 	dst->err[1] = rec1->data.p8Err2;

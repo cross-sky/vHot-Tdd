@@ -5,6 +5,8 @@
 
 #define AirOutTemperMax100 1000		//110度
 
+//1-吸气， 2-蒸发，3-环温，4-出水，5-回水，6-板换冷凝，7-经济器入，8-经济器出，9-盘管入，10-盘管出
+//11-排气， PT1-吸气压力，PT2-排气压力
 typedef enum{
 	ADCIN0_AIN,		//comp in T
 	ADCIN1_MEVA,	//middle evaporate
@@ -46,6 +48,7 @@ int16_t ADC_getAOut(void);
 int16_t ADC_getAIN(void);
 int16_t ADC_getMEva(void);
 int16_t ADC_getSuperHeat(void);
+int16_t ADC_getAINSaturation(void);
 
 void ADC_setRealData(ADC_ENUM adcIn, int16_t data);
 #endif

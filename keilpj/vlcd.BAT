@@ -24,6 +24,7 @@ SET CPU_CLOCK=0x007A1200
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\staterunfunction.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\funstate.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\cominputdi.__i"
+"E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\pressure.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmCC" --Via "..\output\main.__i"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\ArmLink" --Via "..\Output\STM32-DEMO.lnp"
 "E:\Program Files (x86)\Keil\ARM\ARMCC\bin\fromelf.exe" "..\Output\STM32-DEMO.axf" --i32combined --output "..\Output\STM32-DEMO.hex"

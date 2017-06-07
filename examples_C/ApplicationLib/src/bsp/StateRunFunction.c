@@ -136,6 +136,7 @@ STATEFUN_ENUM StateFun_funHeat_exit(void)
 	{
 	case Time2S:
 		MainData_txSetHz(30);	
+		
 		break;
 	case Time60S:
 		MainData_txSetHz(0);
@@ -153,7 +154,11 @@ STATEFUN_ENUM StateFun_funHeat_exit(void)
 		RV_setRelay(RELAY7_FUNH, UNDONE);
 		RV_setRelay(RELAY8_FUNL, UNDONE);
 		Valve_setToStep(VALVE_TYPE_MAINA, 30, VALVE_CLOSE);
-		clearCurFlag();
+
+		//close valve calc
+		ValveClac_closeClac(VALVE_TYPE_MAINA);
+
+		clearCurFlag();		
 		return FUN_STATE_INIT;
 	default:
 		break;
@@ -187,7 +192,11 @@ static void driverStartCheck(void)
 static void setValveToinitSteps(VALVEKINDLE_ENUM valveKindle)
 {
 	int16_t steps = 350 - Valve_getTotalSteps(valveKindle);
+
+	//need to re-enable valveCalc, then disable valveCalc
+	ValveClac_startClac(VALVE_TYPE_MAINA);
 	Valve_setToStep(valveKindle, steps, VALVE_RUN);
+	ValveClac_closeClac(VALVE_TYPE_MAINA);
 }
 
 STATEFUN_ENUM StateFun_funHeat_init(void)
@@ -224,7 +233,7 @@ STATEFUN_ENUM StateFun_funHeat_init(void)
 
 		//final to run state
 		clearCurFlag();
-//		printf("heat init\r\n");
+		ValveClac_startClac(VALVE_TYPE_MAINA);
 		return FUN_STATE_RUN;
 	default:
 		break;

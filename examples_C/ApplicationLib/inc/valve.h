@@ -50,7 +50,7 @@ uint16_t Valve_lenEvent(void);
 void Valve_destoryEvent(void);
 void Valve_ProcessEvent(VALVEKINDLE_ENUM valveKind);
 uint16_t Valve_getState(VALVEKINDLE_ENUM valveKind);
-void Valve_taskProcess(void);
+void RVOUT_taskProcess(void);
 void Valve_hwInit(void);
 
 
@@ -59,6 +59,10 @@ int16_t Valve_getTotalSteps(VALVEKINDLE_ENUM valvekindle);
 void Valve_setToStep(VALVEKINDLE_ENUM valveKindle, int16_t steps, VALVESTATE_ENUM state);
 
 void ValveCalc_calcValveMain(VALVEKINDLE_ENUM valveKind);
+
+void ValveCalc_task(void);
+void ValveClac_closeClac(VALVEKINDLE_ENUM valveKind);
+void ValveClac_startClac(VALVEKINDLE_ENUM valveKind);
 
 #endif
 

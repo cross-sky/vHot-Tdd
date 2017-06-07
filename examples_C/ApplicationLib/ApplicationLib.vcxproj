@@ -16,6 +16,7 @@
     <ClCompile Include="src\bsp\ComInputADC.c" />
     <ClCompile Include="src\bsp\ComInputDI.c" />
     <ClCompile Include="src\bsp\MainData.c" />
+    <ClCompile Include="src\bsp\pressure.c" />
     <ClCompile Include="src\bsp\relay.c" />
     <ClCompile Include="src\bsp\RTCom2.c" />
     <ClCompile Include="src\bsp\RTCom3rec.c" />
@@ -39,6 +40,7 @@
     <ClInclude Include="inc\adc_filter.h" />
     <ClInclude Include="inc\comm.h" />
     <ClInclude Include="inc\MainData.h" />
+    <ClInclude Include="inc\pressure.h" />
     <ClInclude Include="inc\RTCom2.h" />
     <ClInclude Include="inc\RTcom1.h" />
   </ItemGroup>

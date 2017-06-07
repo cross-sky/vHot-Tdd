@@ -153,6 +153,7 @@
     <ClCompile Include="src\bsp\ComInputDI_Test.cpp" />
     <ClCompile Include="src\bsp\ComInput_Test.cpp" />
     <ClCompile Include="src\bsp\Funstate_Test.cpp" />
+    <ClCompile Include="src\bsp\Pressure_Test.cpp" />
     <ClCompile Include="src\bsp\Queue_Test.cpp" />
     <ClCompile Include="src\bsp\relay_Test.cpp" />
     <ClCompile Include="src\bsp\RTCom2_Test.cpp" />

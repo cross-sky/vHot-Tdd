@@ -54,3 +54,4 @@ TEST(RTCOM2_TEST, recFuncode0xf1)
 	RTCom2Rec_pushEvent(&src, 5);
 	RTCom2_task();
 }
+

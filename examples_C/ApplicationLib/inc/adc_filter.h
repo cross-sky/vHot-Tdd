@@ -75,4 +75,33 @@ int16_t iADCTemperCalc10K(uint16_t index,uint16_t adcValue);
 uint16_t uADCSearchData10KV2(uint16_t searchValue);
 int16_t iADCTemperCalc10KV2(uint16_t index,uint16_t adcValue);
 
+
+//5kNTC 4.7k基准，
+static const uint16_t	ntcAdc5K[]={
+	275 ,	287 ,	300 ,	315 ,	330 ,	346 ,	364 ,
+	382 ,	401 ,	422 ,	443 ,	464 ,	486 ,	509 ,
+	533 ,	558 ,	584 ,	611 ,	639 ,	668 ,	699 ,
+	727 ,	756 ,	786 ,	815 ,	845 ,	876 ,	907 ,
+	937 ,	969 ,	1000, 	1036, 	1071, 	1108, 	1145, 
+	1183, 	1221, 	1259, 	1297, 	1337, 	1376, 	1416, 
+	1456, 	1497, 	1537, 	1578, 	1619, 	1660, 	1700, 
+	1741, 	1782, 	1823, 	1864, 	1904, 	1945, 	1985, 
+	2025, 	2064, 	2104, 	2143, 	2181, 	2220, 	2258, 
+	2295, 	2333, 	2369, 	2405, 	2441, 	2477, 	2512, 
+	2546, 	2580, 	2613, 	2646, 	2678, 	2710, 	2741, 
+	2771, 	2801, 	2831, 	2860, 	2888, 	2916, 	2943, 
+	2970, 	2996, 	3022, 	3047, 	3071, 	3096, 	3119, 
+	3142, 	3164, 	3186, 	3208, 	3229, 	3250, 	3270, 
+	3289, 	3308, 	3327, 	3346, 	3363, 	3381, 	3398, 
+	3415, 	3431, 	3447, 	3462, 	3477, 	3492, 		
+};
+#define ADC5K_ARRAY_NUM			(sizeof(ntcAdc5K)/sizeof(uint16_t))
+#define ADC5K_INDEX_MAX			(ADC5K_ARRAY_NUM-1)	// 数组下标的最大可用取值，对应 80℃采样值下标
+#define ADC5K_INDEX_MIN			(1)						//数组下标的最小可用取值，对应-30℃采样值下标
+#define ADC5K_TEMPER_REF		(-30)					//温度基准点，即下标为0时对应的温度
+#define ADC5K_TEMP_LAST			80						//温度最后值，即数组最后一个对应的温度
+uint16_t uADCSearchData5K(uint16_t searchValue);
+int16_t iADCTemperCalc5K(uint16_t index,uint16_t adcValue);
+
+
 #endif

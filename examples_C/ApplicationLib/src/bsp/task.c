@@ -8,9 +8,10 @@ TPC_TASK TaskComps[]=
 	{0, 0, 301,  301, LED1on},			// 5*200=1s   ok	RTCom2_task
 	{0, 0, 302,  302, RTCom2_task},		//  rtcom2 test
 	{0, 0, 20, 20, ComInputADC_DIProcess},//ADC - di
-	{0, 0, 6,  6, Valve_taskProcess},	//rvout 
-	{0, 0, 300,  300, UART3_RTProcess}, //rs485 
+	{0, 0, 6,  6, RVOUT_taskProcess},	//rvout 
+	{0, 0, 299,  299, UART3_RTProcess}, //rs485 
 	{0, 0, 100,  100, Funstate_processEvent},
+	{0, 0, 200,  200, ValveCalc_task}, //valve calc task
 //	{0, 0, 4,  4, UartDmaSendV2},
 	//{0, 0, 1,  1, UartDmaSend},
 };
