@@ -14,7 +14,7 @@ typedef enum{
 
 #define RS485_RxPin				GPIO_Pin_11
 #define RS485_TxPin				GPIO_Pin_10	//GPIOB
-#define RS485_RePin				GPIO_Pin_8	//GPIOA
+#define RS485_RePin				GPIO_Pin_11	//GPIOA ------------@@@@@@@@管脚有问题，换一个。
 
 //这是一个双向寄存器，包含了TDR和RDR，对它读操作，读取的是RDR寄存器的值，对它的写操作，实际上是写到TDR寄存器的
 #define USART3_Tx_DR_Base		0x40004804

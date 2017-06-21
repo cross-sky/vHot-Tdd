@@ -10,13 +10,13 @@
 typedef enum{
 	ADCIN0_AIN,		//comp in T
 	ADCIN1_MEVA,	//middle evaporate
-	ADCIN2,
-	ADCIN3,
-	ADCIN4,
+	ADCIN2_ENV,
+	ADCIN3_WOUT,
+	ADCIN4_WIN,
 	ADCIN5,
 	ADCIN6,
-	ADCIN7,
-	ADCIN8,
+	ADCIN7_ECONIN,
+	ADCIN8_ECONOUT,
 	ADCIN9,
 	ADCIN11_AOUT, //pc5
 	ADCPT1_L,	//pb0
@@ -47,7 +47,10 @@ void ComInputADC_ADCDmaChannel1_ISR(void);
 int16_t ADC_getAOut(void);
 int16_t ADC_getAIN(void);
 int16_t ADC_getMEva(void);
+int16_t ADC_getWIN(void);
+int16_t ADC_getWOUT(void);
 int16_t ADC_getSuperHeat(void);
+void ADC_setSuperHeat(int16_t value);
 int16_t ADC_getAINSaturation(void);
 
 void ADC_setRealData(ADC_ENUM adcIn, int16_t data);

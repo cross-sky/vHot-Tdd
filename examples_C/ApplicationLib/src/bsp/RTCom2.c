@@ -11,6 +11,8 @@ static uint8_t RxBuff[Rx2BUF_MAX]={0};
 typedef enum{
 	BIT_FUNCODE = 2,
 	BIT_FUNVALUE,
+	BIT_FUNVALUE2,
+	BIT_CRR
 }BIT_ENUMS;
 
 typedef enum{
@@ -18,6 +20,8 @@ typedef enum{
 	REC_CODE_RELAY,
 	REC_CODE_VALVE,
 	REC_CODE_RETURN,
+	REC_CODE_SUPERHEAT,
+	REC_CODE_SHZ,
 	REC_CODE_MAX
 }REC_CODE_ENUM;
 
@@ -33,9 +37,11 @@ static void recCode1(uint8_t value);
 static void recCode2(uint8_t value);
 static void recCode3(uint8_t value);
 static void recCode4(uint8_t value);
+static void recCode5(uint8_t value);
+static void recCode6(uint8_t value);
 
 static pvNormalFunU8 S_tabHandle[REC_CODE_MAX]={
-	recCode1,recCode2,recCode3,recCode4,
+	recCode1,recCode2,recCode3,recCode4,recCode5,recCode6
 };
 
 static uint8_t* puartGetRTxAddress(void)
@@ -237,11 +243,21 @@ void RTCom2Rec_destoryEvent(void)
 void RTCom2Rec_recProcess(void)
 {
 	uint8_t funcode;
+	uint8_t crr = 0;
 	if (RTCom2Rec_lengthEvent() == 0)
 	{
 		return;
 	}
 	RTCom2Rec_popEvent(S_trec);
+
+	//rx 0xac 0xca funcode value1 value2 crr.
+	//check crc
+	crr = RTCom3_checkXrr(S_trec, BIT_CRR);
+	if (crr != S_trec[BIT_CRR])
+	{
+		return;
+	}
+
 	funcode = S_trec[BIT_FUNCODE]&0x0f;
 	if ( funcode < REC_CODE_MAX)
 	{
@@ -251,9 +267,10 @@ void RTCom2Rec_recProcess(void)
 
 static void recCode4(uint8_t value)
 {
-//	value;
-	memcpy(S_txcod4, S_trec, 5);
-	vuart2DmaTxDataEnable(5, S_txcod4);
+	//rx tx
+//	0xca 0xac 0xf4 0 0 crr
+	memcpy(S_txcod4, S_trec, 6);
+	vuart2DmaTxDataEnable(6, S_txcod4);
 }
 
 bool RTCom2Rec_getPrintADCFlag(void)
@@ -263,11 +280,15 @@ bool RTCom2Rec_getPrintADCFlag(void)
 
 static void recCode1(uint8_t value)
 {
+	//0x80 print message
+	//0xca 0xac 0xf0 01 0 crr
 	S_setPrintADCFlag = value & 0x01;
 }
 
 static void recCode2(uint8_t value)
 {
+	//0x81 relay
+	//0xca 0xac 0xf1 1 0 crr
 	uint8_t isdone, relay;
 	//DONE_ENUM  isdone = value & 0x80;
 	//RELAY_ENUM ;
@@ -278,15 +299,37 @@ static void recCode2(uint8_t value)
 
 static void recCode3(uint8_t value)
 {
+	//0x82 0x80(means a forward) 0x1e(code)
+	//0xca 0xac 0xf2 0x80 0x1e crr
 	EventValve_T eve;
 	uint8_t valveKindle = value >> 7;
 	uint8_t state = value & 0x03;
 
 	eve.event.eventType = VALVE_TYPE;
 	eve.event.eventId = (VALVEKINDLE_ENUM)valveKindle;
-	eve.code = (int8_t)S_trec[BIT_FUNVALUE+1];
+	eve.code = (int8_t)S_trec[BIT_FUNVALUE2];
 	eve.state = (VALVESTATE_ENUM)state;
 	Valve_pushEvent(&eve);
+}
+
+static void recCode5(uint8_t value)
+{
+	//set super heat
+	//0xca 0xac 0xf4 0x28 0 crr
+	if (value > 0 && value <= 100)
+	{
+		ADC_setSuperHeat(value);
+	}
+}
+
+static void recCode6(uint8_t value)
+{
+	//set hz
+	//0xca 0xac 0xf5 0x1e 0 8d(crr)
+	if (value > 29 && value <= 70)
+	{
+		MainData_txSetHz(value);
+	}
 }
 
 static void task1RepeatPrintADC(void)
@@ -295,9 +338,6 @@ static void task1RepeatPrintADC(void)
 	if (S_setPrintADCFlag)
 	{
 		//snprintf
-		//datalen = sprintf_s((char*)TxBuff,Tx2BUF_MAX,"adc!");
-		//datalen = snprintf((char*)TxBuff,Tx2BUF_MAX,"adc!");
-
 		datalen = ComInputADC_printAdc((char*)TxBuff,Tx2BUF_MAX);
 		vuart2DmaTxDataEnable(datalen, TxBuff);
 	}

@@ -32,6 +32,8 @@ static ComInput_T S_comInputAdc;
 
 static int16_t S_pressure[2];
 
+static int16_t S_superHeat=50;
+
 static void convertADCData(void)
 {
 	uint8_t i;
@@ -94,6 +96,16 @@ void ComInputADC_aveFun(void)
 	convertADCData();
 }
 
+static uint16_t printCop(char* dst, uint16_t maxSize)
+{
+	uint16_t len=0;
+	uint16_t q1 = (uint16_t)(137.67 * (ADC_getWOUT() - ADC_getWIN()));
+	uint16_t cop = q1 * 100 / (MainData_getPower() + 1);
+	len += snprintf(dst + len, maxSize - len,"q-%d,", q1);
+	len += snprintf(dst + len, maxSize - len,"cop-%d,", cop);
+	return len;
+}
+
 uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 {
 	uint16_t len= 0;
@@ -112,11 +124,17 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 	//
 	len += snprintf(dst + len, maxSize - len,"DI-%d,", ComInputDI_getAveData());
 	len += snprintf(dst + len, maxSize - len,"DR-%d,", RTCom3_getCount());
+	len += snprintf(dst + len, maxSize - len,"sut-%d,", S_superHeat);
 
+	//driver message
+	len += MainData_printDriverMessage(dst + len, maxSize - len);
+
+	len += printCop(dst + len, maxSize - len);
 	//rs485 data
 	//memcpy(dst + len, RTCom3_getRS485Data(), sizeof(RTCom3RFrame1_T));
 	//len += sizeof(RTCom3RFrame1_T);
 
+	//kw 
 	len  += snprintf(dst + len, maxSize - len, "\r\n");
 	return len;
 }
@@ -318,6 +336,18 @@ int16_t ADC_getMEva(void)
 	return S_relData[ADCIN1_MEVA];
 }
 
+//water out
+int16_t ADC_getWOUT(void)
+{
+	return S_relData[ADCIN3_WOUT];
+}
+
+//water in
+int16_t ADC_getWIN(void)
+{
+	return S_relData[ADCIN4_WIN];
+}
+
 //ÎüÆø±¥ºÍÎÂ¶È
 int16_t ADC_getAINSaturation(void)
 {
@@ -326,7 +356,12 @@ int16_t ADC_getAINSaturation(void)
 
 int16_t ADC_getSuperHeat(void)
 {
-	return 50;
+	return S_superHeat;
+}
+
+void ADC_setSuperHeat(int16_t value)
+{
+	S_superHeat = value;
 }
 
 void ADC_setRealData(ADC_ENUM adcIn, int16_t data)

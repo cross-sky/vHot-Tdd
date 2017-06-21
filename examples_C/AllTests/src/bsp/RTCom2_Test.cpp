@@ -12,7 +12,7 @@ extern "C"
 #define bit_value 3
 
 static uint8_t baseData[8]={
-	0xca, 0xca, 0xf0, 0x01, 0xaa
+	0xca, 0xac, 0xf0, 0x01, 0x00, 0x97
 };
 
 static uint8_t src[30]={
@@ -24,7 +24,7 @@ void setup()
 {
 	RTCom2Rec_createEvent();
 	RTCom2_paraInit();
-	memcpy(src, baseData, 5);
+	memcpy(src, baseData, 6);
 }
 
 void teardown()
@@ -35,7 +35,7 @@ void teardown()
 
 TEST(RTCOM2_TEST, recFuncode0xf0)
 {
-	RTCom2Rec_pushEvent(&src, 5);
+	RTCom2Rec_pushEvent(&src, 6);
 	RTCom2_task();
 	LONGS_EQUAL(1, RTCom2Rec_getPrintADCFlag());
 }
@@ -44,14 +44,14 @@ TEST(RTCOM2_TEST, recFuncode0xf1)
 {
 	src[bit_funcode] = 0xf1;
 	src[bit_value] = 0x00;
-	RTCom2Rec_pushEvent(&src, 5);
+	RTCom2Rec_pushEvent(&src, 6);
 	RTCom2_task();
 	//LONGS_EQUAL(1, RTCom2Rec_getPrintADCFlag());
 
 	src[bit_funcode] = 0xf2;
 	src[bit_value] = 0x01;
 	src[bit_value+1] = 0x1f;
-	RTCom2Rec_pushEvent(&src, 5);
+	RTCom2Rec_pushEvent(&src, 6);
 	RTCom2_task();
 }
 

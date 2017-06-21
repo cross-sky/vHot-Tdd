@@ -16,6 +16,9 @@ void MainData_rxConvert(P_RTCom3RFrame1 rec1);
 uint8_t MainData_rxDrGetStatus(void);
 
 void MainData_initPara(void);
+uint16_t MainData_printDriverMessage(char* dst, uint16_t maxSize);
+
+uint16_t MainData_getPower(void);
 
 #endif
 

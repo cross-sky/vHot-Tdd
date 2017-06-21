@@ -40,7 +40,7 @@ TEST(ValveTest, pushAndPop)
 
 TEST(ValveTest, processEvent)
 {
-	uint8_t i;
+	uint8_t i, j = 5;
 	Valve_pushEvent(&src);
 	for (i = 0; i<= runcode + 10; i++)
 	{
@@ -55,7 +55,7 @@ TEST(ValveTest, CalcValve)
 {
 	ADC_setRealData(ADCIN11_AOUT, 800);
 	ADC_setRealData(ADCIN0_AIN, 100);
-	ADC_setRealData(ADCIN1_MEVA, 30);
+	ADC_setRealData(ADCPT1_L, 30);
 	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
 
 	Valve_popEvent(&dst);
@@ -65,9 +65,11 @@ TEST(ValveTest, CalcValve)
 	Valve_popEvent(&dst);
 	LONGS_EQUAL(VALVE_STEPS_ONECE, dst.code);//again forward
 
-	ADC_setRealData(ADCIN1_MEVA, 60);	//100-40 = 40 < 50
+	ADC_setRealData(ADCPT1_L, 60);	//100-40 = 40 < 50
 	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
 	Valve_popEvent(&dst);
 	LONGS_EQUAL(-VALVE_STEPS_ONECE/2, dst.code);//then back
+
+
 }
 

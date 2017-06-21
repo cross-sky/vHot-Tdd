@@ -171,9 +171,10 @@ STATEFUN_ENUM StateFun_funHeat_exit(void)
 
 static void driverStartCheck(void)
 {
+	uint8_t drStatus = MainData_rxDrGetStatus();
 	if (getCompStartCheck() == UNDONE)
 	{
-		if (MainData_rxDrGetStatus() == 6)
+		if (drStatus >= 6 && drStatus <100)
 		{
 			addRecRunCount();
 		}

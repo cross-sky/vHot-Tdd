@@ -410,6 +410,40 @@ void ValveCalc_calcValveMain(VALVEKINDLE_ENUM valveKind)
 	//0.1 排气温度>100,
 	if (ADC_getAOut() > AirOutTemperMax100)
 	{
+		//k = 10,
+		code = (ADC_getAOut()- AirOutTemperMax100);
+		//
+		Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+		return;
+	}
+
+	//1. 计算吸气-蒸发
+	subT = ADC_getAIN() - ADC_getAINSaturation();
+	//2.获取目标过热度
+	superHeat = ADC_getSuperHeat();
+
+	//3.calc valve steps
+	code = calcValveStepsMainA(valveKind, subT, superHeat);
+	//@@@@@@@@@@@@@@@@
+	//min step to 150
+	if (code + Valve_getTotalSteps(VALVE_TYPE_MAINA) < 120)
+	{
+		return;
+	}
+
+	//push to queue
+	Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+}
+
+void ValveCalc_calcValveSub(VALVEKINDLE_ENUM valveKind)
+{
+	int16_t superHeat,subT;
+	int16_t code;
+
+	//0.1 排气温度>100,
+	if (ADC_getAOut() > AirOutTemperMax100)
+	{
+		//k = 10,
 		code = (ADC_getAOut()- AirOutTemperMax100+10)/10;
 		//
 		Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);

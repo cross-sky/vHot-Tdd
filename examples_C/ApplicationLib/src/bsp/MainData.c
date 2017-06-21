@@ -22,6 +22,7 @@ typedef struct _DriverData{
 }DriverData_T;
 
 static DriverData_T S_driverData;
+static DriverData_T* P_driverData = &S_driverData;
 
 typedef struct _MData{
 	uint16_t* realADC;
@@ -35,8 +36,8 @@ static void initDriverData(void)
 	S_driverData.txValue.p1Set = 0;
 	S_driverData.txValue.p2run = 0;
 	S_driverData.txValue.p3Code = 0;
-	S_driverData.txValue.p4Upspeed = 3;
-	S_driverData.txValue.p5DownSpeed = 3;
+	S_driverData.txValue.p4Upspeed = 2;
+	S_driverData.txValue.p5DownSpeed = 2;
 	S_driverData.txValue.p6Null = 0;
 }
 
@@ -47,7 +48,7 @@ void MainData_txSetHz(uint8_t hz)
 		return;
 	}
 	S_driverData.txValue.p1Set = hz;
-	//@@@@@要不要设置P2
+	//@@@@@要设置P2
 }
 uint8_t MainData_txGetHz(void)
 {
@@ -81,11 +82,16 @@ uint8_t MainData_txGetDownspeed(void)
 	return S_driverData.txValue.p5DownSpeed;
 }
 
+uint16_t MainData_getPower(void)
+{
+	return P_driverData->rxValue.power;
+}
+
 void MainData_rxConvert(P_RTCom3RFrame1 rec1)
 {
 	DriverRecData_T* dst = &S_driverData.rxValue;
-	S_driverData.txValue.p2run = rec1->data.p1RunHz;
-
+//	S_driverData.txValue.p2run = rec1->data.p1RunHz;
+	dst->runHz = rec1->data.p1RunHz;
 	dst->status = rec1->data.p2State;
 	dst->dcI = rec1->data.p3IH * 10 + rec1->data.p4IL / 10;
 	dst->dcU = (rec1->data.p5UH << 8) + rec1->data.p6UL;
@@ -99,7 +105,7 @@ void MainData_rxConvert(P_RTCom3RFrame1 rec1)
 	dst->verComp = rec1->data.p11compVer;
 	dst->acU = rec1->data.p17U220 << 1;
 	dst->acI = rec1->data.p18I220H * 10 + rec1->data.p19I220L / 10;
-	dst->power = rec1->data.p20KWH * 10 + rec1->data.p21KWL / 10;
+	dst->power = ((rec1->data.p20KWH << 8) + rec1->data.p21KWL) * 10;
 }
 
 uint8_t MainData_rxDrGetStatus(void)
@@ -111,3 +117,22 @@ void MainData_initPara(void)
 {
 	initDriverData();
 }
+
+uint16_t MainData_printDriverMessage(char* dst, uint16_t maxSize)
+{
+	uint16_t len = 0;
+
+	len += snprintf(dst + len, maxSize - len,"shz-%d,", MainData_txGetHz());
+	len += snprintf(dst + len, maxSize - len,"rhz-%d,", P_driverData->rxValue.runHz);
+	len += snprintf(dst + len, maxSize - len,"T-%d,", P_driverData->rxValue.ipmTemp);
+	len += snprintf(dst + len, maxSize - len,"U-%d,", P_driverData->rxValue.dcU);
+	len += snprintf(dst + len, maxSize - len,"I-%d,", P_driverData->rxValue.dcI);
+	len += snprintf(dst + len, maxSize - len,"%d,", P_driverData->rxValue.err[0]);
+	len += snprintf(dst + len, maxSize - len,"%d,", P_driverData->rxValue.err[1]);
+	len += snprintf(dst + len, maxSize - len,"%d,", P_driverData->rxValue.err[2]);
+	len += snprintf(dst + len, maxSize - len,"%d,", P_driverData->rxValue.err[3]);
+	len += snprintf(dst + len, maxSize - len,"p-%d,", P_driverData->rxValue.power);
+
+	return len;
+}
+

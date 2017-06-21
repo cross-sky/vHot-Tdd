@@ -36,11 +36,6 @@ void RTCom3_initRCflag(P_RTRCFlag rcFlag)
 	rcFlag->sendCountMax = 60;
 }
 
-//static uint8_t* getSend1FrameHeaderAddr(void)
-//{
-//	return S_tsend1;
-//}
-
 uint8_t* RTCom3_getRS485Data(void)
 {
 	return S_trec;
@@ -234,7 +229,7 @@ static void UART3_hwInit(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(RS485_GPIO,&GPIO_InitStructure);
 
-	//configure rx485 re pa.10@@@@
+	//configure rx485 re pa.11@@@@
 	GPIO_InitStructure.GPIO_Pin = RS485_RePin;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
@@ -288,7 +283,7 @@ static void UART3_hwInit(void)
 	//Enable DMA Channel3 Interrupt 
 	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Ch_Usart3_Rx_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 5;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -355,6 +350,7 @@ void Usart3_IdlHandle_ISR(void)
 	{
 		IOA_L(RS485_RePin);
 		USART_ClearITPendingBit(USART3, USART_IT_TC);
+		USART_ClearFlag(USART3, USART_FLAG_TC);
 		return;
 	}
 
