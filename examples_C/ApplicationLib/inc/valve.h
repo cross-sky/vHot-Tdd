@@ -64,5 +64,7 @@ void ValveCalc_task(void);
 void ValveClac_closeClac(VALVEKINDLE_ENUM valveKind);
 void ValveClac_startClac(VALVEKINDLE_ENUM valveKind);
 
+void ValveCalc_calcValveSub(VALVEKINDLE_ENUM valveKind);
+
 #endif
 

@@ -51,7 +51,7 @@ TEST(ValveTest, processEvent)
 	LONGS_EQUAL(DONE, Valve_getState(VALVE_TYPE_MAINA));
 }
 
-TEST(ValveTest, CalcValve)
+TEST(ValveTest, CalcMainValve)
 {
 	ADC_setRealData(ADCIN11_AOUT, 800);
 	ADC_setRealData(ADCIN0_AIN, 100);
@@ -69,7 +69,33 @@ TEST(ValveTest, CalcValve)
 	ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
 	Valve_popEvent(&dst);
 	LONGS_EQUAL(-VALVE_STEPS_ONECE/2, dst.code);//then back
+}
 
+TEST(ValveTest, CalcSubValve)
+{
+	//env=40, econin=400, econout=460; economizerT=50;
+	ADC_setRealData(ADCIN2_ENV, 40);
+	ADC_setRealData(ADCIN7_ECONIN, 400);
+	ADC_setRealData(ADCIN8_ECONOUT, 460);
+	ValveCalc_calcValveSub(VALVE_TYPE_SUBB);
 
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(VALVE_STEPS_ONECE/2, dst.code); //first forward
+
+	ADC_setRealData(ADCIN8_ECONOUT, 440);
+	ValveCalc_calcValveSub(VALVE_TYPE_SUBB);
+
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(-VALVE_STEPS_ONECE/4, dst.code); //second back
+
+	ADC_setRealData(ADCIN2_ENV, 51);
+	ValveCalc_calcValveSub(VALVE_TYPE_SUBB);
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(30, dst.code); // env set to 51, close sub valve
+
+	dst.code = 0;
+	ValveCalc_calcValveSub(VALVE_TYPE_SUBB);
+	Valve_popEvent(&dst);
+	LONGS_EQUAL(0, dst.code);
 }
 

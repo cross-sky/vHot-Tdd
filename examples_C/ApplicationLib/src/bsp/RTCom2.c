@@ -22,6 +22,7 @@ typedef enum{
 	REC_CODE_RETURN,
 	REC_CODE_SUPERHEAT,
 	REC_CODE_SHZ,
+	REC_CODE_ECONOMIZERHEAT,
 	REC_CODE_MAX
 }REC_CODE_ENUM;
 
@@ -39,9 +40,10 @@ static void recCode3(uint8_t value);
 static void recCode4(uint8_t value);
 static void recCode5(uint8_t value);
 static void recCode6(uint8_t value);
+static void recCode7(uint8_t value);
 
 static pvNormalFunU8 S_tabHandle[REC_CODE_MAX]={
-	recCode1,recCode2,recCode3,recCode4,recCode5,recCode6
+	recCode1,recCode2,recCode3,recCode4,recCode5,recCode6,recCode7
 };
 
 static uint8_t* puartGetRTxAddress(void)
@@ -245,18 +247,14 @@ void RTCom2Rec_recProcess(void)
 	uint8_t funcode;
 	uint8_t crr = 0;
 	if (RTCom2Rec_lengthEvent() == 0)
-	{
 		return;
-	}
 	RTCom2Rec_popEvent(S_trec);
 
 	//rx 0xac 0xca funcode value1 value2 crr.
 	//check crc
 	crr = RTCom3_checkXrr(S_trec, BIT_CRR);
 	if (crr != S_trec[BIT_CRR])
-	{
 		return;
-	}
 
 	funcode = S_trec[BIT_FUNCODE]&0x0f;
 	if ( funcode < REC_CODE_MAX)
@@ -265,13 +263,7 @@ void RTCom2Rec_recProcess(void)
 	}
 }
 
-static void recCode4(uint8_t value)
-{
-	//rx tx
-//	0xca 0xac 0xf4 0 0 crr
-	memcpy(S_txcod4, S_trec, 6);
-	vuart2DmaTxDataEnable(6, S_txcod4);
-}
+
 
 bool RTCom2Rec_getPrintADCFlag(void)
 {
@@ -312,6 +304,14 @@ static void recCode3(uint8_t value)
 	Valve_pushEvent(&eve);
 }
 
+static void recCode4(uint8_t value)
+{
+	//rx tx
+	//	0xca 0xac 0xf4 0 0 crr
+	memcpy(S_txcod4, S_trec, 6);
+	vuart2DmaTxDataEnable(6, S_txcod4);
+}
+
 static void recCode5(uint8_t value)
 {
 	//set super heat
@@ -329,6 +329,16 @@ static void recCode6(uint8_t value)
 	if (value > 29 && value <= 70)
 	{
 		MainData_txSetHz(value);
+	}
+}
+
+static void recCode7(uint8_t value)
+{
+	//set super heat
+	//0xca 0xac 0xf6 0x28 0 crr
+	if (value > 0 && value <= 100)
+	{
+		ADC_setEconomizerHeat(value);
 	}
 }
 

@@ -192,7 +192,7 @@ static void driverStartCheck(void)
 
 static void setValveToinitSteps(VALVEKINDLE_ENUM valveKindle)
 {
-	int16_t steps = 350 - Valve_getTotalSteps(valveKindle);
+	int16_t steps = 275 - Valve_getTotalSteps(valveKindle);
 
 	//need to re-enable valveCalc, then disable valveCalc
 	ValveClac_startClac(VALVE_TYPE_MAINA);

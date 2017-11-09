@@ -30,9 +30,14 @@ static uint8_t S_hardFlag = DONE;
 
 static ComInput_T S_comInputAdc;
 
+//高低压力值
 static int16_t S_pressure[2];
 
-static int16_t S_superHeat=50;
+//目标主过热度
+static int16_t S_superHeat=60;
+
+//经济器过热度；经济器出-经济器入
+static int16_t S_economizerHeat = 50;
 
 static void convertADCData(void)
 {
@@ -125,6 +130,7 @@ uint16_t ComInputADC_printAdc(char* dst, uint16_t maxSize)
 	len += snprintf(dst + len, maxSize - len,"DI-%d,", ComInputDI_getAveData());
 	len += snprintf(dst + len, maxSize - len,"DR-%d,", RTCom3_getCount());
 	len += snprintf(dst + len, maxSize - len,"sut-%d,", S_superHeat);
+	len += snprintf(dst + len, maxSize - len,"ect-%d,", S_economizerHeat);
 
 	//driver message
 	len += MainData_printDriverMessage(dst + len, maxSize - len);
@@ -362,6 +368,35 @@ int16_t ADC_getSuperHeat(void)
 void ADC_setSuperHeat(int16_t value)
 {
 	S_superHeat = value;
+}
+
+int16_t ADC_getEnv(void)
+{
+	return S_relData[ADCIN2_ENV];
+}
+
+//经济器入
+int16_t ADC_getEconIn(void)
+{
+	return S_relData[ADCIN7_ECONIN];
+}
+
+//经济器出
+int16_t ADC_getEconOut(void)
+{
+	return S_relData[ADCIN8_ECONOUT];
+}
+
+//经济器过热度
+int16_t ADC_getEconomizerHeat(void)
+{
+	return S_economizerHeat;
+}
+
+//set 经济器目标过热度
+void ADC_setEconomizerHeat(int16_t value)
+{
+	S_economizerHeat = value;
 }
 
 void ADC_setRealData(ADC_ENUM adcIn, int16_t data)

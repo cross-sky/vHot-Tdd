@@ -53,6 +53,12 @@ int16_t ADC_getSuperHeat(void);
 void ADC_setSuperHeat(int16_t value);
 int16_t ADC_getAINSaturation(void);
 
+void ADC_setEconomizerHeat(int16_t value);
+int16_t ADC_getEconomizerHeat(void);
+int16_t ADC_getEconOut(void);
+int16_t ADC_getEconIn(void);
+int16_t ADC_getEnv(void);
+
 void ADC_setRealData(ADC_ENUM adcIn, int16_t data);
 #endif
 

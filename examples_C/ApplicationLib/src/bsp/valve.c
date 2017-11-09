@@ -10,7 +10,7 @@ static uint16_t S_valveCalcCount = 0;
 
 static ValveStatus_T S_valveTab[VALVE_TYPE_MAX]={
 	{DONE, 500, 0, VALVE_USED, VALVE_STEPS_ONECE, DirectHold, 0},
-	{DONE, 500, 0, VALVE_USED, VALVE_STEPS_ONECE, DirectHold, 0},
+	{DONE, 500, 0, VALVE_USED, VALVE_STEPS_ONECE>>1, DirectHold, 0},
 };
 
 ValveStatus_T* prtvalveStatus= S_valveTab;
@@ -33,7 +33,7 @@ static int16_t S_stepsTab[VALVE_TYPE_MAX][ValveEnumMax]={
 	{VALVE_INIT_STEP,VALVE_CLOSE_STEP,VALVE_MIN_STEP,VALVE_MAX_STEP-200}
 };
 
-
+static uint8_t S_calcFlag = 0;
 
 static bool isValveUsed(VALVEKINDLE_ENUM valveKind)
 {
@@ -236,6 +236,9 @@ void Valve_hwInit(void)
 void Valve_setToStep(VALVEKINDLE_ENUM valveKindle, int16_t steps, VALVESTATE_ENUM state)
 {
 	EventValve_T initEvent;
+
+	if (steps == 0)
+		return;
 	initEvent.event.eventType = VALVE_TYPE;
 	initEvent.event.eventId = valveKindle;
 	initEvent.code = steps;
@@ -435,47 +438,77 @@ void ValveCalc_calcValveMain(VALVEKINDLE_ENUM valveKind)
 	Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
 }
 
+static bool checkEnvAboveT(VALVEKINDLE_ENUM valveKind)
+{
+	if (ADC_getEnv() >= 50)
+	{
+		//close sub valve
+		if (isValveUsed(valveKind))
+		{
+			Valve_setToStep(valveKind, 30, VALVE_INIT);
+			prtvalveStatus[valveKind].isUsed = VALVE_UNUSED;
+		}
+		return true;
+	}
+	return false;
+}
+
 void ValveCalc_calcValveSub(VALVEKINDLE_ENUM valveKind)
 {
 	int16_t superHeat,subT;
 	int16_t code;
 
-	//0.1 排气温度>100,
-	if (ADC_getAOut() > AirOutTemperMax100)
-	{
-		//k = 10,
-		code = (ADC_getAOut()- AirOutTemperMax100+10)/10;
-		//
-		Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+	////0.1 排气温度>100,
+	//if (ADC_getAOut() > AirOutTemperMax100)
+	//{
+	//	//k = 10,
+	//	code = (ADC_getAOut()- AirOutTemperMax100+10)/10;
+	//	//
+	//	Valve_setToStep(valveKind, code, VALVE_RUN);
+	//	return;
+	//}
+
+	//env > 5, exit
+	if (checkEnvAboveT(valveKind))
 		return;
+
+	//env < 5, then start sub valve
+	if (!isValveUsed(valveKind))
+	{
+		prtvalveStatus[valveKind].isUsed = VALVE_USED;
+		//Valve_setToStep(valveKind, 30, VALVE_RUN);
+		//return;
 	}
 
 	//1. 计算吸气-蒸发
-	subT = ADC_getAIN() - ADC_getAINSaturation();
+	subT = ADC_getEconOut() - ADC_getEconIn();
 	//2.获取目标过热度
-	superHeat = ADC_getSuperHeat();
+	superHeat = ADC_getEconomizerHeat();
 
 	//3.calc valve steps
 	code = calcValveStepsMainA(valveKind, subT, superHeat);
 	//@@@@@@@@@@@@@@@@
-	//min step to 150
-	if (code + Valve_getTotalSteps(VALVE_TYPE_MAINA) < 120)
-	{
-		return;
-	}
+	//min step to 30
+	if (code + Valve_getTotalSteps(valveKind) < 40)
+		code = 40 - Valve_getTotalSteps(valveKind);
 
 	//push to queue
-	Valve_setToStep(VALVE_TYPE_MAINA, code, VALVE_RUN);
+	Valve_setToStep(valveKind, code, VALVE_RUN);
 }
 
+static bool checkStartValveCalc(void)
+{
+	return S_calcFlag == DONE;
+}
 
 void ValveCalc_task(void)
 {
 	if (S_valveCalcCount >= 60)
 	{
-		if (isValveUsed(VALVE_TYPE_MAINA))
+		if (checkStartValveCalc())
 		{
 			ValveCalc_calcValveMain(VALVE_TYPE_MAINA);
+			//ValveCalc_calcValveSub(VALVE_TYPE_SUBB);
 		}
 
 		S_valveCalcCount = 0;
@@ -485,11 +518,13 @@ void ValveCalc_task(void)
 
 void ValveClac_closeClac(VALVEKINDLE_ENUM valveKind)
 {
-	prtvalveStatus[valveKind].isUsed = VALVE_UNUSED;
+	//prtvalveStatus[valveKind].isUsed = VALVE_UNUSED;
+	S_calcFlag = UNDONE;
 }
 
 void ValveClac_startClac(VALVEKINDLE_ENUM valveKind)
 {
 	S_valveCalcCount = 0;
-	prtvalveStatus[valveKind].isUsed = VALVE_USED;
+	S_calcFlag = DONE;
+	//prtvalveStatus[valveKind].isUsed = VALVE_USED;
 }
